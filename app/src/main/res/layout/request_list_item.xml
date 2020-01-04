@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:weightSum="5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/request_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="5"
+            android:padding="8dp"
+            android:textSize="22dp"
+            app:layout_constraintEnd_toStartOf="@+id/reject_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/reject_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:elevation="20dp"
+            style="@style/Widget.MaterialComponents.Button"
+            android:textSize="10sp"
+            android:text="reject"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/confirm_btn"
+            app:layout_constraintTop_toBottomOf="@+id/request_name_tv"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <Button
+            android:id="@+id/confirm_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:elevation="20dp"
+            style="@style/Widget.MaterialComponents.Button"
+            android:textSize="10sp"
+            android:text="confirm"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/reject_btn"
+            app:layout_constraintStart_toStartOf="@+id/request_name_tv"
+            app:layout_constraintTop_toBottomOf="@+id/request_name_tv"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

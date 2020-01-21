@@ -64,7 +64,7 @@ public class SignIn extends BaseActivity implements View.OnClickListener {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(SignIn.this, "Signed In: "+user,
                                     Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(SignIn.this, ParentActivity.class);
+                            Intent intent = new Intent(SignIn.this, FragmentsHolderActivity.class);
                             startActivity(intent);
 //                            updateUI(user);
                         } else {

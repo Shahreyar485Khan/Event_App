@@ -8,7 +8,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +26,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.eventapp.ActivitySendPushNotification;
 import com.example.eventapp.Adapters.SearchAdapter;
+import com.example.eventapp.Interfaces.ResponseCallback;
 import com.example.eventapp.R;
 import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
+import com.example.eventapp.Utils.SharedPreferenceManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,6 +72,8 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
     private RecyclerView recyclerView;
     SearchAdapter searchAdapter;
     PhpMethodsUtils phpMethodsUtils;
+
+    String rec_id=null;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -129,20 +135,20 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
+        /*if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }
+        }*/
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+       /* if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
     }
 
     //method to load all the devices from database
@@ -213,16 +219,68 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
     public void onClick(String bookmarksStr) {
 
     }
-
+    String temp_id = null;
     @Override
     public void btnOnClick(View v, int position) {
 
         String email = v.getTag(R.string.email).toString();
         String name = v.getTag(R.string.name).toString();
 
-        Toast.makeText(getActivity(), ""+email, Toast.LENGTH_SHORT).show();
+      //  phpMethodsUtils.getNameFromID();
 
-        phpMethodsUtils.sendRequest(String.valueOf(position+1), email, name);
+      //  boolean isReceive = phpMethodsUtils.getIdFromEmail(email);
+
+      //  phpMethodsUtils.sendRequest(String.valueOf(temp_id), email, name);
+       /* if (isReceive){
+
+           temp_id =  SharedPreferenceManager.getInstance(getActivity()).getRecipientID();
+
+        }
+        Toast.makeText(getActivity(), "id " + temp_id + "email " + email, Toast.LENGTH_SHORT).show();
+*/
+
+
+        phpMethodsUtils.retrieveDataFromServer(email,new ResponseCallback(){
+            @Override
+            public void onSuccess(String response){
+                //Get result from here
+                temp_id = response;
+                Toast.makeText(getActivity(), "id " + response + "email " + email, Toast.LENGTH_SHORT).show();
+
+                phpMethodsUtils.sendRequestCallBack(String.valueOf(temp_id), email, name);
+
+            }
+        });
+
+
+
+
+        /* getIdFromEmail(email);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Sending Request...");
+        progressDialog.show();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 100ms
+                progressDialog.dismiss();
+                Toast.makeText(getActivity(), "id " + rec_id + "email " + email, Toast.LENGTH_SHORT).show();
+                phpMethodsUtils.sendRequest(String.valueOf(id), email, name);
+            }
+        }, 1000);
+
+*/
+
+
+        if (id != null) {
+
+            //Toast.makeText(getActivity(), "id " + id + "email " + email, Toast.LENGTH_SHORT).show();
+
+         //   phpMethodsUtils.sendRequest(String.valueOf(id), email, name);
+        }
 
     }
 
@@ -238,6 +296,66 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+       // void onFragmentInteraction(Uri uri);
     }
+
+
+
+
+
+
+
+    public void getIdFromEmail(String email) {
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_GET_ID_BY_EMAIL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.d("SearchFragment", response);
+                        JSONArray obj = null;
+                        try {
+
+                            obj = new JSONArray(response);
+                            rec_id = obj.getString(0);
+                            Log.d("SearchFragment", rec_id);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getActivity(), "error" + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email);
+                return params;
+            }
+        };
+
+        MyVolley.getInstance(getActivity()).addToRequestQueue(stringRequest);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

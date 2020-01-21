@@ -27,7 +27,6 @@ public class SharedPrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean ("IS_LOGGED_IN", isLoggedIn);
         editor.commit();
-
     }
 
     public boolean getISLogged_IN() {
@@ -36,11 +35,11 @@ public class SharedPrefManager {
         return sharedPreferences.getBoolean("IS_LOGGED_IN", false);
     }
 
-    public void saveToken(Context context, String toke){
+    public void saveToken(Context context, String token){
         mContext = context;
         sharedPreferences = mContext.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("ID_TOKEN", toke);
+        editor.putString("ID_TOKEN", token);
         editor.commit();
     }
 

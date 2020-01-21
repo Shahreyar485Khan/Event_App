@@ -7,6 +7,8 @@ public class SharedPreferenceManager {
 
     private static final String SHARED_PREF_NAME = "FCMSharedPref";
     private static final String TAG_TOKEN = "tagtoken";
+    private static final String REQUEST_RECIPIENT_ID= "request_recipient_id";
+    private static final String REQUEST_SENDER_NAME= "request_sender_name";
 
     private static SharedPreferenceManager mInstance;
     private static Context mCtx;
@@ -36,4 +38,36 @@ public class SharedPreferenceManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return  sharedPreferences.getString(TAG_TOKEN, null);
     }
+
+    public boolean saveRecipientID(String id){
+
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(REQUEST_RECIPIENT_ID, id);
+        editor.apply();
+
+        return true;
+    }
+
+    public String getRecipientID(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return  sharedPreferences.getString(REQUEST_RECIPIENT_ID, null);
+    }
+
+
+    public boolean saveSenderName(String name){
+
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(REQUEST_SENDER_NAME, name);
+        editor.apply();
+
+        return true;
+    }
+
+    public String getSenderName(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return  sharedPreferences.getString(REQUEST_SENDER_NAME, null);
+    }
+
 }

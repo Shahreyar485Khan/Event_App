@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -154,8 +155,8 @@ public class SignUp extends BaseActivity implements
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             sendTokenToServer();
-                            Intent intent = new Intent(mContext, ActivitySendPushNotification.class);
-                            startActivity(intent);
+                           // Intent intent = new Intent(mContext, ActivitySendPushNotification.class);
+                           // startActivity(intent);
 //                            updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -349,6 +350,7 @@ public class SignUp extends BaseActivity implements
     }
     private ProgressDialog progressDialog;
 
+
     //storing token to mysql server
     private void sendTokenToServer() {
         progressDialog = new ProgressDialog(this);
@@ -362,6 +364,9 @@ public class SignUp extends BaseActivity implements
             progressDialog.dismiss();
             Toast.makeText(this, "Token not generated", Toast.LENGTH_LONG).show();
             return;
+        }else{
+
+            Toast.makeText(SignUp.this, token, Toast.LENGTH_LONG).show();
         }
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_REGISTER_DEVICE,
@@ -371,7 +376,8 @@ public class SignUp extends BaseActivity implements
                         progressDialog.dismiss();
                         try {
                             JSONObject obj = new JSONObject(response);
-                            Toast.makeText(SignUp.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                           String str = obj.getString("message");
+                            Toast.makeText(SignUp.this, str, Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -395,6 +401,13 @@ public class SignUp extends BaseActivity implements
                 return params;
             }
         };
+/*
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                90000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));*/
+
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }

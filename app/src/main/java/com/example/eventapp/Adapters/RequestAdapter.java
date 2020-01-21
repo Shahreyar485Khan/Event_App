@@ -1,6 +1,8 @@
 package com.example.eventapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.eventapp.MainActivity;
 import com.example.eventapp.R;
 
 import java.util.List;
@@ -56,13 +59,23 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestA
 
         String nameStr = namesList.get(position);
         String emailStr = emailList.get(position);
-        String idStr = emailList.get(position);
+        String idStr = idList.get(position);
 
-        holder.nameTextView.setText(emailStr);
+        Log.d("requestfragment","name   "+nameStr+" email "+emailStr+" id  " + idStr);
+
+        holder.nameTextView.setText(nameStr);
 
 //        holder.sendButton.setTag(R.string.email, emailStr);
 //        holder.sendButton.setTag(R.string.name, nameStr);
 //        holder.sendButton.setTag(idStr);
+
+        holder.confirmButton.setTag(R.string.sender_name , nameStr);
+        holder.confirmButton.setTag(R.string.sender_id , idStr);
+        holder.confirmButton.setTag(R.string.sender_email , emailStr);
+
+        holder.rejectButton.setTag(R.string.sender_name , nameStr);
+        holder.rejectButton.setTag(R.string.sender_id , idStr);
+        holder.rejectButton.setTag(R.string.sender_email , emailStr);
 
         holder.confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +84,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestA
                 onClickListener.btnOnClick(v, position);
             }
         });
+
 
         holder.rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +113,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestA
     }
 
     public void setIdList(List<String> mIdList) {
+        idList = mIdList;
+        notifyDataSetChanged();
+    }
+
+    public void setEmailList(List<String> mIdList) {
         emailList = mIdList;
         notifyDataSetChanged();
     }

@@ -82,6 +82,9 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         String dayOfWeek = simpledateformat.format(date);
 
         String dateStr = dayOfWeek+", "+month+"/"+dayOfMonth+"/"+year;
+
+
+
 //        tv.setText(dayOfWeek+", "+month+"/"+dayOfMonth+"/"+year);
 
         onSetDateListener.onSetDate(dateStr, textView);

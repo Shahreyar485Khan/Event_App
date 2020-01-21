@@ -1,11 +1,1 @@
-package com.example.eventapp.Utils;
-
-public class EndPoints {
-    public static final String URL_REGISTER_DEVICE = "http://192.168.10.4/EventFcm/RegisterDevice.php";
-    public static final String URL_SEND_REQUEST = "http://192.168.10.4/EventFcm/sendRequest.php";
-    public static final String GET_REQUEST_STATUS = "http://192.168.10.4/EventFcm/GetRequestsStatus.php";
-    public static final String URL_SEND_SINGLE_PUSH = "http://192.168.10.4/EventFcm/sendSinglePush.php";
-    public static final String URL_SEND_MULTIPLE_PUSH = "http://192.168.10.4/EventFcm/sendMultiplePush.php";
-    public static final String URL_FETCH_DEVICES = "http://192.168.10.4/EventFcm/GetRegisteredDevices.php";
-    public static final String URL_FETCH_CURRENT_DEVICE = "http://192.168.10.4/EventFcm/GetCurrentDevice.php";
-}
+package com.example.eventapp.Utils;public class EndPoints {    public static final String URL_REGISTER_DEVICE = "http://192.168.10.10/EventFcm/RegisterDevice.php";    public static final String URL_SEND_REQUEST = "http://192.168.10.10/EventFcm/sendRequest.php";    public static final String GET_REQUEST_STATUS = "http://192.168.10.10/EventFcm/GetRequestsStatus.php";    public static final String URL_SEND_SINGLE_PUSH = "http://192.168.10.10/EventFcm/sendSinglePush.php";    public static final String URL_SEND_MULTIPLE_PUSH = "http://192.168.10.10/EventFcm/sendMultiplePush.php";    public static final String URL_FETCH_DEVICES = "http://192.168.10.10/EventFcm/GetRegisteredDevices.php";    public static final String URL_FETCH_CURRENT_DEVICE = "http://192.168.10.10/EventFcm/GetCurrentDevice.php";    public static final String URL_ACCEPT_REQUEST = "http://192.168.10.10/EventFcm/AcceptRequest.php";    public static final String URL_GET_ID_BY_EMAIL = "http://192.168.10.10/EventFcm/GetIdFromEmail.php";    public static final String URL_GET_NAME_BY_ID = "http://192.168.10.10/EventFcm/GetNameFromId.php";    public static final String URL_GET_PENDING_REQUEST_LIST = "http://192.168.10.10/EventFcm/GetPendingRequestList.php";    public static final String URL_ADD_EVENT = "http://192.168.10.10/EventFcm/AddEvent.php";}

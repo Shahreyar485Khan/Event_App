@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.example.eventapp.R;
 import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
+import com.example.eventapp.Utils.StringFormat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,6 +103,8 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
         super.onStart();
 
         senderName = new ArrayList<>();
+        senderEmail = new ArrayList<>();
+        id = new ArrayList<>();
         recipientName = new ArrayList<>();
 
         phpMethodsUtils = new PhpMethodsUtils(getActivity());
@@ -121,25 +125,25 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
 
 //        loadRegisteredDevices();
 
-        readRequests("pending");
+        getPendingRequestList("pending");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
+       /* if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }
+        }*/
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+        /*if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
     }
 
     @Override
@@ -156,11 +160,25 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
     @Override
     public void btnOnClick(View v, int position) {
 
-        if (v.getId() == R.id.confirm_btn) {
-//            phpMethodsUtils.readRequests("accepted");
+       /* if (v.getId() == R.id.confirm_btn) {
+            readRequests("accepted");
         } else if (v.getId() == R.id.reject_btn) {
-//            phpMethodsUtils.readRequests("rejected");
+            readRequests("rejected");
+        }*/
+
+        String email = v.getTag(R.string.sender_email).toString();
+        String name = v.getTag(R.string.sender_name).toString();
+        String id = v.getTag(R.string.sender_id).toString();
+
+
+
+        if (v.getId() == R.id.confirm_btn) {
+            phpMethodsUtils.acceptRequest(id, "accepted",email, name);
+        } else if (v.getId() == R.id.reject_btn) {
+            phpMethodsUtils.acceptRequest(id,"rejected",email,name);
         }
+
+
     }
 
     /**
@@ -175,10 +193,12 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+      //  void onFragmentInteraction(Uri uri);
     }
 
     private List<String> senderName;
+    private List<String> senderEmail;
+    private List<String> id;
     private List<String> recipientName;
     //    private List<String> name;
     private ProgressDialog progressDialog;
@@ -190,7 +210,7 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
         progressDialog.setMessage("Sending Push");
         progressDialog.show();
 
-        Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.GET_REQUEST_STATUS,
                 new Response.Listener<String>() {
                     @Override
@@ -232,13 +252,89 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                            Toast.makeText(getActivity(), "errorr", Toast.LENGTH_SHORT).show();
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("req_status", reqStatus);
+
+                return params;
+            }
+        };
+
+        MyVolley.getInstance(getActivity()).addToRequestQueue(stringRequest);
+    }
+
+
+
+    public void getPendingRequestList(String reqStatus) {
+
+        progressDialog = new ProgressDialog(getActivity());
+
+        progressDialog.setMessage("Sending Push");
+        progressDialog.show();
+
+        //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_GET_PENDING_REQUEST_LIST,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        JSONObject obj = null;
+                        try {
+                            obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+
+                                Toast.makeText(getActivity(), "IN", Toast.LENGTH_SHORT).show();
+                                JSONArray jsonDevices = obj.getJSONArray("requests");
+
+                                for (int i = 0; i < jsonDevices.length(); i++) {
+                                    JSONObject d = jsonDevices.getJSONObject(i);
+//                                    devices.add(d.getString("email"));
+                                    String sender_name = d.getString("sendername");
+                                    sender_name = StringFormat.removebrakets(sender_name);
+                                    sender_name = StringFormat.removeQoutes(sender_name);
+
+                                    String sender_email = d.getString("senderemail");
+                                    sender_email = StringFormat.removebrakets(sender_email);
+                                    sender_email = StringFormat.removeQoutes(sender_email);
+
+                                    senderName.add(sender_name);
+                                    id.add(d.getString("senderid"));
+                                    senderEmail.add(sender_email);
+                                    //recipientName.add(d.getString("recipientname"));
+//                                    id.add(d.getString("id"));
+
+                                }
+
+                                Log.d("RequestFragment", "check "+senderName);
+//
+                                requestAdapter.setSenderList(senderName);
+                                requestAdapter.setIdList(id);
+                                requestAdapter.setEmailList(senderEmail);
+                               // requestAdapter.setRecipientList(recipientName);
+                               // searchAdapter.setIdList(id);
+                                recyclerView.setAdapter(requestAdapter);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getActivity(), "errorr", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                Log.d("RequestFragment", "currentid "+ PhpMethodsUtils.currentDeviceId);
+                params.put("req_status", reqStatus);
+                params.put("recipient_id", PhpMethodsUtils.currentDeviceId);
 
                 return params;
             }

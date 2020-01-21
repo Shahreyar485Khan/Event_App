@@ -58,6 +58,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         final String token = SharedPreferenceManager.getInstance(this).getDeviceToken();
         final String email = editTextEmail.getText().toString();
 
+        Toast.makeText(this, "Token "+token, Toast.LENGTH_LONG).show();
+
         if (token == null) {
             progressDialog.dismiss();
             Toast.makeText(this, "Token not generated", Toast.LENGTH_LONG).show();

@@ -128,12 +128,25 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
                 dateBundle.putString("dateinmilli", dateInMilli.toString());
                 dateBundle.putString("date", dateClicked.toString());
 
-                RequestsFragment nextFrag= new RequestsFragment();
+               /* RequestsFragment nextFrag= new RequestsFragment();
                 nextFrag.setArguments(dateBundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, nextFrag, "findThisFragment")
                         .addToBackStack(null)
-                        .commit();
+                        .commit();*/
+
+
+
+                /*EventFragment  nextFrag= new EventFragment();
+                nextFrag.setArguments(dateBundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();*/
+
+
+
+
 
 //                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 //                EventFragment fragmentDemo = EventFragment.newInstance("", "my title");

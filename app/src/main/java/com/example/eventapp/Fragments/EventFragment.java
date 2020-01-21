@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,11 @@ import com.example.eventapp.Interfaces.DatePickerInterface;
 import com.example.eventapp.R;
 import com.example.eventapp.Interfaces.TimePickerInterface;
 import com.example.eventapp.Utils.DateUtils;
+import com.example.eventapp.Utils.PhpMethodsUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,13 +36,16 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    PhpMethodsUtils phpMethodsUtils;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-    TextView startTimeTv, startDateTv, endTimeTv, endDateTv;
+    TextView startTimeTv, startDateTv, endTimeTv, endDateTv, createEvent;
+    EditText title, location, discription;
 
     /**
      * Use this factory method to create a new instance of
@@ -78,18 +87,22 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
         registerListeners();
 
         dateUtils = new DateUtils();
+        phpMethodsUtils = new PhpMethodsUtils(getActivity());
 
-        String dateInMilli = getArguments().getString("dateinmilli");
+        /*String dateInMilli = getArguments().getString("dateinmilli");
         String date = getArguments().getString("date");
         Toast.makeText(getActivity(), "Date: " + dateInMilli, Toast.LENGTH_SHORT).show();
 
         String fullDate = dateUtils.milliToDate(Long.parseLong(dateInMilli));
 
-        Toast.makeText(getActivity(), "" + fullDate, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "" + fullDate, Toast.LENGTH_SHORT).show();*/
 
+        Date todayDate = Calendar.getInstance().getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String todayString = formatter.format(todayDate);
 
-        startDateTv.setText(fullDate);
-        endDateTv.setText(fullDate);
+        startDateTv.setText(todayString);
+        endDateTv.setText(todayString);
         startTimeTv.setText("8 : 00 AM");
         endTimeTv.setText("9 : 00 AM");
     }
@@ -101,6 +114,8 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
 
         endTimeTv.setOnClickListener(this);
         endDateTv.setOnClickListener(this);
+
+        createEvent.setOnClickListener(this);
     }
 
     void initUi() {
@@ -108,6 +123,11 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
         startDateTv = getActivity().findViewById(R.id.event_date_tv);
         endTimeTv = getActivity().findViewById(R.id.event_end_time_tv);
         endDateTv = getActivity().findViewById(R.id.event_end_date_tv);
+        createEvent = getActivity().findViewById(R.id.btn_create_event);
+
+        title = getActivity().findViewById(R.id.title_et);
+        location = getActivity().findViewById(R.id.location_et);
+        discription = getActivity().findViewById(R.id.discription_et);
     }
 
 
@@ -120,20 +140,20 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
+       /* if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }
+        }*/
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+       /* if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
     }
 
     @Override
@@ -162,13 +182,29 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
         {
             TimePickerFragment timePickerFragment = new TimePickerFragment();
             timePickerFragment.time(this, endTimeTv);
-            timePickerFragment.show(getActivity().getFragmentManager(), "DatePicker");
+            timePickerFragment.show(getActivity().getFragmentManager(), "TimePicker");
         }
         else if(v.getId() == R.id.event_end_date_tv)
         {
             DatePickerFragment dateFragment = new DatePickerFragment();
             dateFragment.date(this, endDateTv);
             dateFragment.show(getActivity().getFragmentManager(), "DatePicker");
+        }
+        if(v.getId() == R.id.btn_create_event)
+        {
+
+          /*  Toast.makeText(getActivity(), "title:   "+title.getText(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "location:   "+location.getText(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "description:   "+discription.getText(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "description:   "+startTimeTv.getText(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "description:   "+startDateTv.getText(), Toast.LENGTH_SHORT).show();
+*/
+            Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
+            phpMethodsUtils.addEvent(title.getText().toString(),location.getText().toString(),discription.getText().toString(),startTimeTv.getText().toString(),startDateTv.getText().toString(),endDateTv.getText().toString(),endTimeTv.getText().toString() );
+
+            /*DatePickerFragment dateFragment = new DatePickerFragment();
+            dateFragment.date(this, endDateTv);
+            dateFragment.show(getActivity().getFragmentManager(), "DatePicker");*/
         }
     }
 
@@ -196,6 +232,6 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+       // void onFragmentInteraction(Uri uri);
     }
 }

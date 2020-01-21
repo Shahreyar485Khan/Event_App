@@ -27,6 +27,16 @@
         app:layout_constraintStart_toStartOf="@+id/title_et"
         app:layout_constraintTop_toBottomOf="@+id/title_et" />
 
+    <EditText
+        android:id="@+id/discription_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:hint="Location"
+        app:layout_constraintEnd_toEndOf="@+id/title_et"
+        app:layout_constraintStart_toStartOf="@+id/title_et"
+        app:layout_constraintTop_toBottomOf="@+id/location_et" />
+
     <LinearLayout
         android:id="@+id/event_start_linear"
         android:layout_width="match_parent"
@@ -35,7 +45,7 @@
         android:weightSum="3"
         app:layout_constraintEnd_toEndOf="@+id/location_et"
         app:layout_constraintStart_toStartOf="@+id/location_et"
-        app:layout_constraintTop_toBottomOf="@+id/location_et">
+        app:layout_constraintTop_toBottomOf="@+id/discription_et">
 
         <TextView
             android:layout_weight="0.5"
@@ -89,6 +99,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_create_event"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

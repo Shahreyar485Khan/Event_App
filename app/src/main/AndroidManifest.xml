@@ -4,6 +4,8 @@
     package="com.example.eventapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,20 +16,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activities.ParentActivity">
-
-        </activity>
-        <activity android:name=".Activities.SignIn">
+        <activity android:name=".Activities.FragmentsHolderActivity"></activity>
+        <activity android:name=".Activities.TempActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.ParentActivity"></activity>
+        <activity android:name=".Activities.SignIn" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".Activities.SignUp">
-
-        </activity>
+        <activity android:name=".Activities.SignUp" />
         <activity android:name=".ActivitySendPushNotification" />
         <activity android:name=".BaseActivity" /> <!-- <service android:name=".FirebaseInstanceIDService"> -->
         <!-- <intent-filter> -->
@@ -40,7 +40,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

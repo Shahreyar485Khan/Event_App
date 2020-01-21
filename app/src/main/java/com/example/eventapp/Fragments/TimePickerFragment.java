@@ -6,11 +6,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.app.DialogFragment;
 import android.app.Dialog;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -62,7 +68,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
         /*.........Set a custom title for picker........*/
         TextView tvTitle = new TextView(getActivity());
-        tvTitle.setText("TimePickerDialog Title");
+        tvTitle.setText("TimePickerDialog");
         tvTitle.setBackgroundColor(Color.parseColor("#EEE8AA"));
         tvTitle.setPadding(5, 3, 5, 3);
         tvTitle.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -78,7 +84,6 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         //Get reference of host activity (XML Layout File) TextView widget
 //        TextView tv = (TextView) getActivity().findViewById(R.id.event_time_tv);
         //Set a message for user
-
 
         //Get the AM or PM for current time
         String aMpM = "AM";
@@ -109,10 +114,31 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         //Display the user changed time on TextView
         String time = currentHour+ " : " +minuteStr + " " + aMpM + "\n";
 
-        Toast.makeText(getActivity(), ""+currentHour+" "+minuteStr+" "+aMpM, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(getActivity(), ""+currentHour+" "+minuteStr+" "+aMpM, Toast.LENGTH_SHORT).show();
 //        tv.setText(currentHour+ " : " +minuteStr + " " + aMpM + "\n");
 
-        onClickListener.onSetTimeBtnClick(time, textView);
+
+        String time2 = hourOfDay+":"+minute+" "+aMpM;
+
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        Date date = null;
+        try {
+            date = sdf.parse(time2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("Time: " , sdf.format(date));
+        String str_time = sdf.format(date);
+        java.sql.Time sqlStartDate = new java.sql.Time(date.getTime());
+        Toast.makeText(getActivity(), "time "+sqlStartDate, Toast.LENGTH_SHORT).show();
+
+
+
+
+        onClickListener.onSetTimeBtnClick(sqlStartDate.toString(), textView);
 
     }
 

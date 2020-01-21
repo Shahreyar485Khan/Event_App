@@ -14,7 +14,9 @@ import java.util.Map;
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -39,10 +41,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ParentActivity extends AppCompatActivity implements CalendarFragment.OnFragmentInteractionListener,
-        EventFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener, RequestsFragment.OnFragmentInteractionListener {
+        EventFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener, RequestsFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private List<String> name;
+
+    Button btn_reqList,btn_friendRequest,btn_event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,10 @@ public class ParentActivity extends AppCompatActivity implements CalendarFragmen
 
         phpMethodsUtils.getCurrentDevice();
 
+       /* btn_event.setOnClickListener(this);
+        btn_reqList.setOnClickListener(this);
+        btn_friendRequest.setOnClickListener(this);*/
+
     }
 
     @Override
@@ -78,4 +86,8 @@ public class ParentActivity extends AppCompatActivity implements CalendarFragmen
 //        Toast.makeText(this, "Interacted", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
 }

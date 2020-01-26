@@ -34,7 +34,7 @@
             android:elevation="20dp"
             style="@style/Widget.MaterialComponents.Button"
             android:textSize="10sp"
-            android:text="Send Request"
+            android:text="send Invites"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/name_tv"
             app:layout_constraintTop_toTopOf="parent"

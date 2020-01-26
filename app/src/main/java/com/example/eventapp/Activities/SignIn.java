@@ -1,6 +1,7 @@
 package com.example.eventapp.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,7 +55,7 @@ public class SignIn extends BaseActivity implements View.OnClickListener {
 //        showProgressBar();
 
         // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword("sherry123@gmail.com", "1234567890")
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

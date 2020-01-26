@@ -1,16 +1,40 @@
 package com.example.eventapp.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.eventapp.Adapters.InvitationAdapter;
+import com.example.eventapp.Adapters.RequestAdapter;
 import com.example.eventapp.R;
+import com.example.eventapp.Utils.EndPoints;
+import com.example.eventapp.Utils.MyVolley;
+import com.example.eventapp.Utils.PhpMethodsUtils;
+import com.example.eventapp.Utils.StringFormat;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,11 +44,26 @@ import com.example.eventapp.R;
  * Use the {@link EventInvitationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventInvitationFragment extends Fragment {
+public class EventInvitationFragment extends Fragment implements InvitationAdapter.AdapterListener, InvitationAdapter.InvitationAdapterOnClickHandler{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+  //  private RequestsFragment.OnFragmentInteractionListener mListener;
+
+    private RecyclerView recyclerView;
+    private InvitationAdapter invitationAdapter;
+
+    private List<String> senderName;
+    private List<String> senderEmail;
+    private List<String> id;
+    private List<String> recipientName;
+    //    private List<String> name;
+    private ProgressDialog progressDialog;
+
+    PhpMethodsUtils phpMethodsUtils;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,6 +116,41 @@ public class EventInvitationFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        senderName = new ArrayList<>();
+        senderEmail = new ArrayList<>();
+        id = new ArrayList<>();
+        recipientName = new ArrayList<>();
+
+        phpMethodsUtils = new PhpMethodsUtils(getActivity());
+
+        recyclerView = getActivity().findViewById(R.id.invitation_recycler_view);
+        invitationAdapter = new InvitationAdapter(this, this, getActivity());
+
+//        devices = new ArrayList<>();
+//        id = new ArrayList<>();
+//        name = new ArrayList<>();
+//
+//        phpMethodsUtils = new PhpMethodsUtils(getActivity());
+//
+////        listView = getActivity().findViewById(R.id.listView);
+//
+//        recyclerView = getActivity().findViewById(R.id.recycler_view);
+//        searchAdapter = new SearchAdapter(this, this, getActivity());
+
+//        loadRegisteredDevices();
+
+        getPendingRequestList("pending");
+    }
+
+
+
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -93,6 +167,113 @@ public class EventInvitationFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    @Override
+    public void btnOnClick(View v, int position) {
+
+        String email = v.getTag(R.string.sender_email).toString();
+        String name = v.getTag(R.string.sender_name).toString();
+        String id = v.getTag(R.string.sender_id).toString();
+
+
+
+        if (v.getId() == R.id.confirm_btn) {
+            phpMethodsUtils.acceptRequest(id, "accepted",email, name);
+        } else if (v.getId() == R.id.reject_btn) {
+            phpMethodsUtils.acceptRequest(id,"rejected",email,name);
+        }
+
+
+    }
+
+    @Override
+    public void onClick(String bookmarksStr) {
+
+    }
+
+
+
+
+    public void getPendingRequestList(String reqStatus) {
+
+        progressDialog = new ProgressDialog(getActivity());
+
+        progressDialog.setMessage("Sending Push");
+        progressDialog.show();
+
+        //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_GET_PENDING_REQUEST_LIST,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        JSONObject obj = null;
+                        try {
+                            obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+
+                                Toast.makeText(getActivity(), "IN", Toast.LENGTH_SHORT).show();
+                                JSONArray jsonDevices = obj.getJSONArray("requests");
+
+                                for (int i = 0; i < jsonDevices.length(); i++) {
+                                    JSONObject d = jsonDevices.getJSONObject(i);
+//                                    devices.add(d.getString("email"));
+                                    String sender_name = d.getString("sendername");
+                                    sender_name = StringFormat.removebrakets(sender_name);
+                                    sender_name = StringFormat.removeQoutes(sender_name);
+
+                                    String sender_email = d.getString("senderemail");
+                                    sender_email = StringFormat.removebrakets(sender_email);
+                                    sender_email = StringFormat.removeQoutes(sender_email);
+
+                                    senderName.add(sender_name);
+                                    id.add(d.getString("senderid"));
+                                    senderEmail.add(sender_email);
+                                    //recipientName.add(d.getString("recipientname"));
+//                                    id.add(d.getString("id"));
+
+                                }
+
+                                Log.d("RequestFragment", "check "+senderName);
+//
+                                invitationAdapter.setSenderList(senderName);
+                                invitationAdapter.setIdList(id);
+                                invitationAdapter.setEmailList(senderEmail);
+                                // requestAdapter.setRecipientList(recipientName);
+                                // searchAdapter.setIdList(id);
+                                recyclerView.setAdapter(invitationAdapter);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getActivity(), "errorr", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                Log.d("RequestFragment", "currentid "+ PhpMethodsUtils.currentDeviceId);
+                params.put("req_status", reqStatus);
+                params.put("recipient_id", PhpMethodsUtils.currentDeviceId);
+
+                return params;
+            }
+        };
+
+        MyVolley.getInstance(getActivity()).addToRequestQueue(stringRequest);
+    }
+
+
+
+
+
+
+
 
     /**
      * This interface must be implemented by activities that contain this

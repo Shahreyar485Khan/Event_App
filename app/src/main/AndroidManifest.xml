@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activities.FragmentsHolderActivity"></activity>
+        <activity android:name=".Activities.DisplayEventListActivity"></activity>
+        <activity android:name=".Activities.FragmentsHolderActivity" />
         <activity android:name=".Activities.TempActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,8 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ParentActivity"></activity>
+        <activity android:name=".Activities.ParentActivity" />
         <activity android:name=".Activities.SignIn" />
+        <activity android:name=".Activities.TestFragmentHolder" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".Activities.SignUp" />
         <activity android:name=".ActivitySendPushNotification" />

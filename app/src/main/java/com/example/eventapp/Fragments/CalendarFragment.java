@@ -137,12 +137,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
 
 
 
-                /*EventFragment  nextFrag= new EventFragment();
+                EventFragment  nextFrag= new EventFragment();
                 nextFrag.setArguments(dateBundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, nextFrag, "findThisFragment")
                         .addToBackStack(null)
-                        .commit();*/
+                        .commit();
 
 
 

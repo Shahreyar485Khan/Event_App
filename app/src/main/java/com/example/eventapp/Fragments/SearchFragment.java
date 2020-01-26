@@ -135,20 +135,20 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        /*if (mListener != null) {
+        if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }*/
+        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-       /* if (context instanceof OnFragmentInteractionListener) {
+        if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }*/
+        }
     }
 
     //method to load all the devices from database
@@ -296,7 +296,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-       // void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 

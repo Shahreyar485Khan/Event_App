@@ -1,6 +1,7 @@
 package com.example.eventapp.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,10 +10,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eventapp.Activities.DisplayEventListActivity;
+import com.example.eventapp.Activities.TestFragmentHolder;
 import com.example.eventapp.Interfaces.DatePickerInterface;
 import com.example.eventapp.R;
 import com.example.eventapp.Interfaces.TimePickerInterface;
@@ -44,7 +48,8 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
 
     private OnFragmentInteractionListener mListener;
 
-    TextView startTimeTv, startDateTv, endTimeTv, endDateTv, createEvent;
+    TextView startTimeTv, startDateTv, endTimeTv, endDateTv;
+    Button createEvent,eventList;
     EditText title, location, discription;
 
     /**
@@ -116,6 +121,7 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
         endDateTv.setOnClickListener(this);
 
         createEvent.setOnClickListener(this);
+        eventList.setOnClickListener(this);
     }
 
     void initUi() {
@@ -124,6 +130,7 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
         endTimeTv = getActivity().findViewById(R.id.event_end_time_tv);
         endDateTv = getActivity().findViewById(R.id.event_end_date_tv);
         createEvent = getActivity().findViewById(R.id.btn_create_event);
+        eventList = getActivity().findViewById(R.id.btn_event_list);
 
         title = getActivity().findViewById(R.id.title_et);
         location = getActivity().findViewById(R.id.location_et);
@@ -140,20 +147,20 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-       /* if (mListener != null) {
+        if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }*/
+        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-       /* if (context instanceof OnFragmentInteractionListener) {
+        if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }*/
+        }
     }
 
     @Override
@@ -165,47 +172,71 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
     @Override
     public void onClick(View v) {
 
-        if (v.getId() == R.id.event_time_tv)
-        {
-            TimePickerFragment newFragment = new TimePickerFragment();
-            newFragment.time(this, startTimeTv);
-            newFragment.show(getActivity().getFragmentManager(), "TimePicker");
+        switch (v.getId()){
+
+            case R.id.event_time_tv:{
+
+                TimePickerFragment newFragment = new TimePickerFragment();
+                newFragment.time(this, startTimeTv);
+                newFragment.show(getActivity().getFragmentManager(), "TimePicker");
+
+                break;
+            }
+            case R.id.event_date_tv:{
+
+                DatePickerFragment dateFragment = new DatePickerFragment();
+                dateFragment.date(this, startDateTv);
+                dateFragment.show(getActivity().getFragmentManager(), "DatePicker");
+
+                break;
+            }
+            case R.id.event_end_time_tv:{
+
+                TimePickerFragment timePickerFragment = new TimePickerFragment();
+                timePickerFragment.time(this, endTimeTv);
+                timePickerFragment.show(getActivity().getFragmentManager(), "TimePicker");
+
+                break;
+            }
+            case R.id.event_end_date_tv:{
+
+                DatePickerFragment dateFragment = new DatePickerFragment();
+                dateFragment.date(this, endDateTv);
+                dateFragment.show(getActivity().getFragmentManager(), "DatePicker");
+
+                break;
+            }
+            case R.id.btn_create_event:{
+
+                Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
+                phpMethodsUtils.addEvent(title.getText().toString(),location.getText().toString(),discription.getText().toString(),startTimeTv.getText().toString(),startDateTv.getText().toString(),endDateTv.getText().toString(),endTimeTv.getText().toString() );
+
+
+                break;
+            }
+            case R.id.btn_event_list:{
+
+                Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
+
+              // TestFragmentHolder testFragmentHolder = new TestFragmentHolder();
+              //  testFragmentHolder.replaceFragment(v);
+
+                startActivity(new Intent(getActivity(), DisplayEventListActivity.class));
+
+
+
+               /*  SearchFragment  nextFrag= new SearchFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.viewpager, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();*/
+
+
+                break;
+            }
+
         }
 
-        else if(v.getId() == R.id.event_date_tv)
-        {
-            DatePickerFragment dateFragment = new DatePickerFragment();
-            dateFragment.date(this, startDateTv);
-            dateFragment.show(getActivity().getFragmentManager(), "DatePicker");
-        }
-        else if(v.getId() == R.id.event_end_time_tv)
-        {
-            TimePickerFragment timePickerFragment = new TimePickerFragment();
-            timePickerFragment.time(this, endTimeTv);
-            timePickerFragment.show(getActivity().getFragmentManager(), "TimePicker");
-        }
-        else if(v.getId() == R.id.event_end_date_tv)
-        {
-            DatePickerFragment dateFragment = new DatePickerFragment();
-            dateFragment.date(this, endDateTv);
-            dateFragment.show(getActivity().getFragmentManager(), "DatePicker");
-        }
-        if(v.getId() == R.id.btn_create_event)
-        {
-
-          /*  Toast.makeText(getActivity(), "title:   "+title.getText(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "location:   "+location.getText(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "description:   "+discription.getText(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "description:   "+startTimeTv.getText(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "description:   "+startDateTv.getText(), Toast.LENGTH_SHORT).show();
-*/
-            Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
-            phpMethodsUtils.addEvent(title.getText().toString(),location.getText().toString(),discription.getText().toString(),startTimeTv.getText().toString(),startDateTv.getText().toString(),endDateTv.getText().toString(),endTimeTv.getText().toString() );
-
-            /*DatePickerFragment dateFragment = new DatePickerFragment();
-            dateFragment.date(this, endDateTv);
-            dateFragment.show(getActivity().getFragmentManager(), "DatePicker");*/
-        }
     }
 
     @Override
@@ -232,6 +263,6 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-       // void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 }

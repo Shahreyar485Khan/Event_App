@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.example.eventapp.Adapters.ViewPagerAdapter;
 import com.example.eventapp.Fragments.CalendarFragment;
 import com.example.eventapp.Fragments.EventFragment;
+import com.example.eventapp.Fragments.EventInvitationFragment;
+import com.example.eventapp.Fragments.EventListFragment;
 import com.example.eventapp.Fragments.RequestsFragment;
 import com.example.eventapp.Fragments.SearchFragment;
 import com.example.eventapp.R;
@@ -28,7 +30,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
-public class FragmentsHolderActivity extends AppCompatActivity implements CalendarFragment.OnFragmentInteractionListener {
+public class FragmentsHolderActivity extends AppCompatActivity implements CalendarFragment.OnFragmentInteractionListener, RequestsFragment.OnFragmentInteractionListener
+                                                                            , SearchFragment.OnFragmentInteractionListener,EventFragment.OnFragmentInteractionListener
+                                                                              , EventInvitationFragment.OnFragmentInteractionListener , EventListFragment.OnFragmentInteractionListener {
+
 
 
     private Toolbar toolbar;
@@ -119,6 +124,7 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
         adapter.addFragment(new EventFragment(), "Event");
         adapter.addFragment(new RequestsFragment(), "Requests");
         adapter.addFragment(new SearchFragment(), "Search");
+        adapter.addFragment(new EventInvitationFragment(), "Invites");
         viewPager.setAdapter(adapter);
     }
 
@@ -152,6 +158,13 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
         tabfour.setTextSize(12);
         tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabfour);
+
+        TextView tabfive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabfive.setText("Invites");
+        tabfive.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        tabfive.setTextSize(12);
+        tabfive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home, 0, 0);
+        tabLayout.getTabAt(4).setCustomView(tabfive);
     }
 
     @Override

@@ -130,20 +130,20 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-       /* if (mListener != null) {
+        if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }*/
+        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        /*if (context instanceof OnFragmentInteractionListener) {
+        if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }*/
+        }
     }
 
     @Override
@@ -193,7 +193,7 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-      //  void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
     private List<String> senderName;

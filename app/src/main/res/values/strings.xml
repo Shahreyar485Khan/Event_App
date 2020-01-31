@@ -13,8 +13,10 @@
     <string name="email">email</string>
     <string name="name">name</string>
     <string name="id">id</string>
+    <string name="user_id">user_id</string>
     <string name="sender_name">sender_name</string>
     <string name="sender_email">sender_email</string>
     <string name="sender_id">sender_id</string>
+    <string name="event_id">sender_id</string>
 
 </resources>

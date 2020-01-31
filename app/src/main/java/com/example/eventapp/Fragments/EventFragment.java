@@ -211,27 +211,19 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
                 Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
                 phpMethodsUtils.addEvent(title.getText().toString(),location.getText().toString(),discription.getText().toString(),startTimeTv.getText().toString(),startDateTv.getText().toString(),endDateTv.getText().toString(),endTimeTv.getText().toString() );
 
-
                 break;
             }
             case R.id.btn_event_list:{
 
                 Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
-
-              // TestFragmentHolder testFragmentHolder = new TestFragmentHolder();
-              //  testFragmentHolder.replaceFragment(v);
-
                 startActivity(new Intent(getActivity(), DisplayEventListActivity.class));
+                break;
+            }
 
+            case R.id.btn_joined_event:{
 
-
-               /*  SearchFragment  nextFrag= new SearchFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.viewpager, nextFrag, "findThisFragment")
-                        .addToBackStack(null)
-                        .commit();*/
-
-
+                Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
+               // startActivity(new Intent(getActivity(), DisplayEventListActivity.class));
                 break;
             }
 

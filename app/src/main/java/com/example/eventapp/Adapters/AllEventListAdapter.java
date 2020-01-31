@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.eventapp.R;
+import com.example.eventapp.Utils.PhpMethodsUtils;
 
 import java.util.List;
 
@@ -59,15 +60,25 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
         String location = locationList.get(position);
         String idStr = event_idList.get(position);
         String desc = descList.get(position);
-        String endtime = end_timeList.get(position);
+        String start_time = st_timeList.get(position);
+        String end_time = end_timeList.get(position);
+        String start_date = st_dateList.get(position);
+        String end_date = end_dateList.get(position);
 
 
         holder.txtTitle.setText(title);
+        holder.txtLocation.setText(location);
+        holder.txtDesc.setText(desc);
+        holder.txtStTime.setText(start_time);
+        holder.txtEndTime.setText(end_time);
+        holder.txtStDate.setText(start_date);
+        holder.txtEndDate.setText(end_date);
 
 
      //   holder.btnSendInvites.setTag(R.string.email, title);
      //   holder.btnSendInvites.setTag(R.string.name, nameStr);
         holder.btnSendInvites.setTag(R.string.id, idStr);
+        holder.btnSendInvites.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
 
         holder.btnSendInvites.setOnClickListener(new View.OnClickListener() {
             @Override

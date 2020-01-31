@@ -319,6 +319,8 @@ public class PhpMethodsUtils {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
+                                Log.d("errorOnerrorRes",error.getMessage());
                                 Toast.makeText(mCtx, "error" + error.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }) {
@@ -393,6 +395,61 @@ public class PhpMethodsUtils {
 //                params.put("req_status", "pending");
                 return params;
             }
+        };
+
+        MyVolley.getInstance(mCtx).addToRequestQueue(stringRequest);
+    }
+
+
+    public void acceptEventInvitation(String event_id,String sender_id, String req_status, String email, String name) {
+
+        progressDialog = new ProgressDialog(mCtx);
+
+        progressDialog.setMessage("Sending Push");
+        progressDialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_ACCEPT_EVENT_INVITATION+"event_id="+event_id+"&sender_id="+sender_id+"&recipient_id="+currentDeviceId+"&email="+email+"&name="+name+"&event_req_status="+req_status,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        Toast.makeText(mCtx, "accepted dgdgdrr", Toast.LENGTH_LONG).show();
+                        Log.d("phpMethodUtils", response);
+                        JSONObject obj = null;
+
+                        try {
+                            obj = new JSONObject(response);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //Toast.makeText(mCtx, "accepted" + obj.getString("message"), Toast.LENGTH_LONG).show();
+
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(mCtx, "error" + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+           /* @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("sender", sender_id);
+                params.put("recipient", currentDeviceId);
+                params.put("req_status", req_status);
+                params.put("email", email);
+                params.put("name", name);
+
+//                if (!TextUtils.isEmpty(image))
+//                    params.put("image", image);
+
+//                params.put("req_status", "pending");
+                return params;
+            }*/
         };
 
         MyVolley.getInstance(mCtx).addToRequestQueue(stringRequest);

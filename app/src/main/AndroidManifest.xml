@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activities.DisplayEventListActivity"></activity>
+        <activity android:name=".Activities.DisplayJoinedEventListActivity"></activity>
+        <activity android:name=".Activities.DisplayEventListActivity" />
         <activity android:name=".Activities.FragmentsHolderActivity" />
         <activity android:name=".Activities.TempActivity">
             <intent-filter>

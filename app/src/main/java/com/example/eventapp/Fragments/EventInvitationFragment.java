@@ -55,6 +55,16 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
     private RecyclerView recyclerView;
     private InvitationAdapter invitationAdapter;
 
+
+    private List<String> locationList;
+    private List<String> event_idList;
+    private List<String> titleList;
+    private List<String> descList;
+    private List<String> st_timeList;
+    private List<String> end_timeList;
+    private List<String> st_dateList;
+    private List<String> end_dateList;
+
     private List<String> senderName;
     private List<String> senderEmail;
     private List<String> id;
@@ -121,6 +131,17 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
     public void onStart() {
         super.onStart();
 
+
+        event_idList = new ArrayList<>();
+        titleList = new ArrayList<>();
+        locationList = new ArrayList<>();
+        descList = new ArrayList<>();
+        st_timeList = new ArrayList<>();
+        end_timeList = new ArrayList<>();
+        st_dateList = new ArrayList<>();
+        end_dateList = new ArrayList<>();
+
+
         senderName = new ArrayList<>();
         senderEmail = new ArrayList<>();
         id = new ArrayList<>();
@@ -131,20 +152,9 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
         recyclerView = getActivity().findViewById(R.id.invitation_recycler_view);
         invitationAdapter = new InvitationAdapter(this, this, getActivity());
 
-//        devices = new ArrayList<>();
-//        id = new ArrayList<>();
-//        name = new ArrayList<>();
-//
-//        phpMethodsUtils = new PhpMethodsUtils(getActivity());
-//
-////        listView = getActivity().findViewById(R.id.listView);
-//
-//        recyclerView = getActivity().findViewById(R.id.recycler_view);
-//        searchAdapter = new SearchAdapter(this, this, getActivity());
 
-//        loadRegisteredDevices();
 
-        getPendingRequestList("pending");
+        getPendingInvitationList("pending");
     }
 
 
@@ -174,13 +184,17 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
         String email = v.getTag(R.string.sender_email).toString();
         String name = v.getTag(R.string.sender_name).toString();
         String id = v.getTag(R.string.sender_id).toString();
+        String event_id = v.getTag(R.string.event_id).toString();
 
 
 
-        if (v.getId() == R.id.confirm_btn) {
-            phpMethodsUtils.acceptRequest(id, "accepted",email, name);
-        } else if (v.getId() == R.id.reject_btn) {
-            phpMethodsUtils.acceptRequest(id,"rejected",email,name);
+        if (v.getId() == R.id.event_btn_join) {
+           phpMethodsUtils.acceptEventInvitation(event_id,id, "accepted",email, name);
+            Toast.makeText(getActivity(), "join", Toast.LENGTH_SHORT).show();
+        } else if (v.getId() == R.id.event_btn_reject) {
+            phpMethodsUtils.acceptEventInvitation(event_id,id, "rejected",email, name);
+            Toast.makeText(getActivity(), "not Intrested", Toast.LENGTH_SHORT).show();
+
         }
 
 
@@ -194,7 +208,7 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
 
 
 
-    public void getPendingRequestList(String reqStatus) {
+    public void getPendingInvitationList(String reqStatus) {
 
         progressDialog = new ProgressDialog(getActivity());
 
@@ -202,11 +216,12 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
         progressDialog.show();
 
         //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_GET_PENDING_REQUEST_LIST,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_PENDING_INVITATION_LIST+"recipient_id="+PhpMethodsUtils.currentDeviceId+"&req_status="+reqStatus,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
+                        Log.d("EventInvitationFragment",response);
                         JSONObject obj = null;
                         try {
                             obj = new JSONObject(response);
@@ -214,33 +229,90 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
 
                                 Toast.makeText(getActivity(), "IN", Toast.LENGTH_SHORT).show();
                                 JSONArray jsonDevices = obj.getJSONArray("requests");
+                              //  JSONArray jsonEvents = obj.getJSONArray("events");
 
                                 for (int i = 0; i < jsonDevices.length(); i++) {
                                     JSONObject d = jsonDevices.getJSONObject(i);
 //                                    devices.add(d.getString("email"));
-                                    String sender_name = d.getString("sendername");
+                                    String sender_name = d.getString("sender_name");
                                     sender_name = StringFormat.removebrakets(sender_name);
                                     sender_name = StringFormat.removeQoutes(sender_name);
 
-                                    String sender_email = d.getString("senderemail");
+                                    String sender_email = d.getString("sender_email");
                                     sender_email = StringFormat.removebrakets(sender_email);
                                     sender_email = StringFormat.removeQoutes(sender_email);
 
+                                    String event_id = d.getString("event_id");
+                                    event_id = StringFormat.removebrakets(event_id);
+                                    event_id = StringFormat.removeQoutes(event_id);
+
+                                    String event_title = d.getString("event_title");
+                                    event_title = StringFormat.removebrakets(event_title);
+                                    event_title = StringFormat.removeQoutes(event_title);
+
+                                    String event_location = d.getString("event_location");
+                                    event_location = StringFormat.removebrakets(event_location);
+                                    event_location = StringFormat.removeQoutes(event_location);
+
+                                    String event_desc = d.getString("event_desc");
+                                    event_desc = StringFormat.removebrakets(event_desc);
+                                    event_desc = StringFormat.removeQoutes(event_desc);
+
+                                    String event_st_time = d.getString("event_st_time");
+                                    event_st_time = StringFormat.removebrakets(event_st_time);
+                                    event_st_time = StringFormat.removeQoutes(event_st_time);
+
+                                    String event_end_time = d.getString("event_end_time");
+                                    event_end_time = StringFormat.removebrakets(event_end_time);
+                                    event_end_time = StringFormat.removeQoutes(event_end_time);
+
+                                    String event_st_date = d.getString("event_st_date");
+                                    event_st_date = StringFormat.removebrakets(event_st_date);
+                                    event_st_date = StringFormat.removeQoutes(event_st_date);
+
+
+                                    String event_end_date = d.getString("event_end_date");
+                                    event_end_date = StringFormat.removebrakets(event_end_date);
+                                    event_end_date = StringFormat.removeQoutes(event_end_date);
+
+                                    Log.d("eventid","event id    "+event_id+"   event title "+event_title);
+
+
+
                                     senderName.add(sender_name);
-                                    id.add(d.getString("senderid"));
+                                    id.add(d.getString("sender_id"));
                                     senderEmail.add(sender_email);
+
+                                    event_idList.add(event_id);
+                                    titleList.add(event_title);
+                                    locationList.add(event_location);
+                                    descList.add(event_desc);
+                                    st_timeList.add(event_st_time);
+                                    end_timeList.add(event_end_time);
+                                    st_dateList.add(event_st_date);
+                                    end_dateList.add(event_end_date);
+
                                     //recipientName.add(d.getString("recipientname"));
 //                                    id.add(d.getString("id"));
 
                                 }
 
+
                                 Log.d("RequestFragment", "check "+senderName);
-//
                                 invitationAdapter.setSenderList(senderName);
                                 invitationAdapter.setIdList(id);
                                 invitationAdapter.setEmailList(senderEmail);
-                                // requestAdapter.setRecipientList(recipientName);
-                                // searchAdapter.setIdList(id);
+
+                                invitationAdapter.setEventIdList(event_idList);
+                                invitationAdapter.setTitleList(titleList);
+                                invitationAdapter.setLocationList(locationList);
+                                invitationAdapter.setDescList(descList);
+                                invitationAdapter.setSt_timeList(st_timeList);
+                                invitationAdapter.setEnd_timeList(end_timeList);
+                                invitationAdapter.setSt_dateList(st_dateList);
+                                invitationAdapter.setEnd_dateList(end_dateList);
+
+
                                 recyclerView.setAdapter(invitationAdapter);
                             }
                         } catch (JSONException e) {
@@ -254,7 +326,7 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
                         Toast.makeText(getActivity(), "errorr", Toast.LENGTH_SHORT).show();
                     }
                 }) {
-            @Override
+           /* @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 Log.d("RequestFragment", "currentid "+ PhpMethodsUtils.currentDeviceId);
@@ -262,7 +334,7 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
                 params.put("recipient_id", PhpMethodsUtils.currentDeviceId);
 
                 return params;
-            }
+            }*/
         };
 
         MyVolley.getInstance(getActivity()).addToRequestQueue(stringRequest);

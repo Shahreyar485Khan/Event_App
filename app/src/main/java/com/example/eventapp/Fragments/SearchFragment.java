@@ -253,35 +253,6 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
         });
 
 
-
-
-        /* getIdFromEmail(email);
-
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Sending Request...");
-        progressDialog.show();
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Do something after 100ms
-                progressDialog.dismiss();
-                Toast.makeText(getActivity(), "id " + rec_id + "email " + email, Toast.LENGTH_SHORT).show();
-                phpMethodsUtils.sendRequest(String.valueOf(id), email, name);
-            }
-        }, 1000);
-
-*/
-
-
-        if (id != null) {
-
-            //Toast.makeText(getActivity(), "id " + id + "email " + email, Toast.LENGTH_SHORT).show();
-
-         //   phpMethodsUtils.sendRequest(String.valueOf(id), email, name);
-        }
-
     }
 
     /**
@@ -298,10 +269,6 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
-
-
 
 
 

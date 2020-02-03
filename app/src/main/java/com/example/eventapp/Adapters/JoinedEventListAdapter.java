@@ -14,10 +14,14 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapter.ViewHolders>{
+public class JoinedEventListAdapter extends RecyclerView.Adapter<JoinedEventListAdapter.ViewHolders>{
 
 
     private List<String> mData;
+
+    public static List<String> namesList;
+    public static List<String> emailList;
+    public static List<String> idList;
 
     private List<String> locationList;
     private List<String> event_idList;
@@ -30,11 +34,11 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
 
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-    private final AllEventListAdapter.AdapterListener onClickListener;
+    private final JoinedEventListAdapter.AdapterListener onClickListener;
 
 
     // data is passed into the constructor
-    public AllEventListAdapter(Context context, List<String> data,AllEventListAdapter.AdapterListener listener) {
+    public JoinedEventListAdapter(Context context, List<String> data, JoinedEventListAdapter.AdapterListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.onClickListener = listener;
@@ -48,7 +52,7 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
     // inflates the row layout from xml when needed
     @Override
     public ViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.all_event_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.joined_event_list_item, parent, false);
         return new ViewHolders(view);
     }
 
@@ -56,9 +60,13 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
     @Override
     public void onBindViewHolder(ViewHolders holder, int position) {
 
+        String nameStr = namesList.get(position);
+        String emailStr = emailList.get(position);
+        String idStr = idList.get(position);
+
         String title = titleList.get(position);
         String location = locationList.get(position);
-        String idStr = event_idList.get(position);
+        String event_idStr = event_idList.get(position);
         String desc = descList.get(position);
         String start_time = st_timeList.get(position);
         String end_time = end_timeList.get(position);
@@ -66,6 +74,7 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
         String end_date = end_dateList.get(position);
 
 
+        holder.txtInviteFrom.setText(nameStr);
         holder.txtTitle.setText(title);
         holder.txtLocation.setText(location);
         holder.txtDesc.setText(desc);
@@ -77,19 +86,10 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
 
      //   holder.btnSendInvites.setTag(R.string.email, title);
      //   holder.btnSendInvites.setTag(R.string.name, nameStr);
-        holder.btnSendInvites.setTag(R.string.id, idStr);
-        holder.btnSendInvites.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
+        holder.btnLeaveEvent.setTag(R.string.event_id, event_idStr);
+        holder.btnLeaveEvent.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
 
-        holder.btnJoinedMembers.setTag(R.string.id, idStr);
-        holder.btnJoinedMembers.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
-
-        holder.btnSendInvites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickListener.btnOnClick(view, position);
-            }
-        });
-        holder.btnJoinedMembers.setOnClickListener(new View.OnClickListener() {
+        holder.btnLeaveEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickListener.btnOnClick(view, position);
@@ -107,6 +107,22 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
         return titleList.size();
     }
 
+
+    public void setSenderList(List<String> mNamesList) {
+        namesList = mNamesList;
+        notifyDataSetChanged();
+    }
+
+
+    public void setIdList(List<String> mIdList) {
+        idList = mIdList;
+        notifyDataSetChanged();
+    }
+
+    public void setEmailList(List<String> mIdList) {
+        emailList = mIdList;
+        notifyDataSetChanged();
+    }
 
     public void setEventIdList(List<String> mIdList) {
         event_idList = mIdList;
@@ -154,6 +170,7 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
     // stores and recycles views as they are scrolled off screen
     public class ViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txtTitle;
+        TextView txtInviteFrom;
         TextView txtLocation;
         TextView txtDesc;
         TextView txtStTime;
@@ -161,14 +178,14 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
         TextView txtEndTime;
         TextView txtEndDate;
 
-        Button btnSendInvites;
-        Button btnJoinedMembers;
+        Button btnLeaveEvent;
         Button btnEventUpdate;
         Button btnEventDelete;
 
         ViewHolders(View itemView) {
             super(itemView);
             txtTitle = itemView.findViewById(R.id.event_title);
+            txtInviteFrom = itemView.findViewById(R.id.event_invite_from);
             txtLocation = itemView.findViewById(R.id.event_loc);
             txtDesc = itemView.findViewById(R.id.event_desc);
             txtStDate = itemView.findViewById(R.id.event_st_date);
@@ -177,11 +194,10 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
             txtEndTime = itemView.findViewById(R.id.event_end_time);
 
 
-            btnSendInvites = itemView.findViewById(R.id.event_btn_send);
-            btnEventUpdate = itemView.findViewById(R.id.event_btn_update);
-            btnEventDelete = itemView.findViewById(R.id.event_btn_delete);
-            btnJoinedMembers = itemView.findViewById(R.id.event_btn_all_join);
-          //  btnSendInvites.setOnClickListener(this);
+            btnLeaveEvent = itemView.findViewById(R.id.event_btn_leave);
+           // btnEventUpdate = itemView.findViewById(R.id.event_btn_update);
+           // btnEventDelete = itemView.findViewById(R.id.event_btn_delete);
+           //  btnSendInvites.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 

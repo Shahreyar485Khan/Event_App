@@ -165,7 +165,7 @@ public class TestFragmentHolder extends AppCompatActivity implements CalendarFra
                // }
 
                 break;
-            case R.id.btn_send_invites:
+           /* case R.id.btn_send_invites:
                 label1 = "new4";
                 Fragment f1 = new RequestsFragment();
 
@@ -183,7 +183,7 @@ public class TestFragmentHolder extends AppCompatActivity implements CalendarFra
                     }
                 }
 
-                break;
+                break;*/
             default:
                 break;
         }

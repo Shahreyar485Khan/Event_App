@@ -21,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.eventapp.Adapters.AllEventListAdapter;
 import com.example.eventapp.Adapters.FriendListAdapter;
 
+import com.example.eventapp.Adapters.JoinedMembersListAdapter;
 import com.example.eventapp.R;
 import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
@@ -39,11 +40,11 @@ import java.util.Map;
 
 import static com.example.eventapp.Utils.PhpMethodsUtils.currentDeviceId;
 
-public class DisplayEventListActivity extends AppCompatActivity implements FriendListAdapter.AdapterListener, FriendListAdapter.FriendListAdapterOnClickHandler,AllEventListAdapter.ItemClickListener,AllEventListAdapter.AdapterListener{
-
-
+public class DisplayEventListActivity extends AppCompatActivity implements FriendListAdapter.AdapterListener, FriendListAdapter.FriendListAdapterOnClickHandler,
+                                                                        AllEventListAdapter.ItemClickListener,AllEventListAdapter.AdapterListener,JoinedMembersListAdapter.AdapterListener,JoinedMembersListAdapter.JoinedMembersListAdapterOnClickHandler{
     AllEventListAdapter adapter;
     Button btnSendInvites;
+
     private ArrayList<String> titleList;
     private List<String> locationList;
     private List<String> event_idList;
@@ -53,19 +54,19 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
     private List<String> st_dateList;
     private List<String> end_dateList;
 
-
-
-
-
-
     private ArrayList<String> friendList;
     private ArrayList<String> friend_idList;
     private ArrayList<String> friend_emailList;
+
+    private ArrayList<String> memberList;
+    private ArrayList<String> member_idList;
+    private ArrayList<String> member_emailList;
 
     private RecyclerView mRecyclerViewEvent;
     private RecyclerView mRecyclerViewFriend;
     private AllEventListAdapter allEventListAdapter;
     private FriendListAdapter friendListAdapter;
+    private JoinedMembersListAdapter joinedMembersListAdapter;
     private ProgressDialog progressDialog;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -95,6 +96,10 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         friend_idList = new ArrayList<>();
         friend_emailList = new ArrayList<>();
 
+        memberList = new ArrayList<>();
+        member_idList = new ArrayList<>();
+        member_emailList = new ArrayList<>();
+
         mRecyclerViewEvent = findViewById(R.id.recycler_view_events);
         mRecyclerViewFriend = findViewById(R.id.recyclerview_bottom);
 
@@ -107,11 +112,12 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
 
        friendListAdapter = new FriendListAdapter(this, this,this);
+       joinedMembersListAdapter = new JoinedMembersListAdapter(this, this,this);
 
-       loadAcceptedRequestDevices();
+      // loadAcceptedRequestDevices();
 
 
-        FrameLayout parentThatHasBottomSheetBehavior = (FrameLayout) mRecyclerViewFriend.getParent().getParent();
+        /*FrameLayout parentThatHasBottomSheetBehavior = (FrameLayout) mRecyclerViewFriend.getParent().getParent();
         mBottomSheetBehavior = BottomSheetBehavior.from(parentThatHasBottomSheetBehavior);
         if (mBottomSheetBehavior != null) {
            // setStateText(mBottomSheetBehavior.getState());
@@ -128,12 +134,10 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
                 }
             });
         }
-
+*/
 
 
     }
-
-
 
     private void loadAllEvents() {
 
@@ -213,6 +217,17 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
     private void loadAcceptedRequestDevices() {
 
 
+        if (friendList != null){
+            friendList.clear();
+        }
+        if (friend_idList != null){
+            friend_idList.clear();
+        }
+        if (friend_emailList != null){
+            friend_emailList.clear();
+        }
+
+
       String status =  "accepted";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_PENDING_REQUEST_LIST_GET+"req_status="+status+"&recipient_id="+currentDeviceId,
                 new Response.Listener<String>() {
@@ -276,6 +291,85 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         MyVolley.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    public void loadEventMembers(String event_id,String sender_id,String reqStatus) {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Sending Push");
+        progressDialog.show();
+
+
+        if (memberList != null){
+            memberList.clear();
+        }
+        if (member_idList != null){
+            member_idList.clear();
+        }
+        if (member_emailList != null){
+            member_emailList.clear();
+        }
+
+
+        //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_JOINED_MEMBERS_LIST+"sender_id="+PhpMethodsUtils.currentDeviceId+"&req_status="+reqStatus+"&event_id="+event_id,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        Log.d("JoinedEventMembers",response);
+                        JSONObject obj = null;
+                        try {
+                            obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+                                JSONArray jsonDevices = obj.getJSONArray("members");
+
+                                for (int i = 0; i < jsonDevices.length(); i++) {
+                                    JSONObject d = jsonDevices.getJSONObject(i);
+
+                                    String sender_fname = d.getString("recipient_fname");
+                                    sender_fname = StringFormat.removebrakets(sender_fname);
+                                    sender_fname = StringFormat.removeQoutes(sender_fname);
+
+                                    String sender_lname = d.getString("recipient_lname");
+                                    sender_lname = StringFormat.removebrakets(sender_lname);
+                                    sender_lname = StringFormat.removeQoutes(sender_lname);
+
+                                    String sender_id = d.getString("recipient_id");
+                                    sender_id = StringFormat.removebrakets(sender_id);
+                                    sender_id = StringFormat.removeQoutes(sender_id);
+
+
+                                    String sender_email = d.getString("recipient_email");
+                                    sender_email = StringFormat.removebrakets(sender_email);
+                                    sender_email = StringFormat.removeQoutes(sender_email);
+
+                                    memberList.add(sender_fname+" "+sender_lname);
+                                    member_idList.add(sender_id);
+                                    member_emailList.add(sender_email);
+                                }
+
+
+                                joinedMembersListAdapter.setNamesList(memberList);
+                                joinedMembersListAdapter.setEmailList(member_emailList);
+                                joinedMembersListAdapter.setIdList(member_idList);
+                                mRecyclerViewFriend.setAdapter(joinedMembersListAdapter);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(DisplayEventListActivity.this, "errorr", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
+
+        };
+
+        MyVolley.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
     private void sendEventInvitation(String eventId,String senderId, String recipientId ,String recipientEmail) {
 
 
@@ -304,7 +398,6 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         MyVolley.getInstance(this).addToRequestQueue(stringRequest);
     }
 
-
     @Override
     public void onBackPressed() {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
@@ -331,6 +424,27 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
             case R.id.event_btn_send:{
                 Toast.makeText(this, "send btn", Toast.LENGTH_SHORT).show();
 
+                loadAcceptedRequestDevices();
+
+                FrameLayout parentThatHasBottomSheetBehavior = (FrameLayout) mRecyclerViewFriend.getParent().getParent();
+                mBottomSheetBehavior = BottomSheetBehavior.from(parentThatHasBottomSheetBehavior);
+                if (mBottomSheetBehavior != null) {
+                    // setStateText(mBottomSheetBehavior.getState());
+                    mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                        @Override
+                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+
+                        }
+
+                        @Override
+                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                            //  setOffsetText(slideOffset);
+                        }
+                    });
+                }
+
+
                 eventId = v.getTag(R.string.id).toString();
 
                 View peakView = findViewById(R.id.drag_me);
@@ -348,6 +462,38 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
                 Log.d("sending_invites","current_user_id    "+"event_id "+eventId+ currentDeviceId+"Recipient_id    "+recipientId+"recipient_email  "+recipientEmail);
 
                 Toast.makeText(this, "send event", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case R.id.event_btn_all_join:{
+
+                Toast.makeText(this, "Joined", Toast.LENGTH_SHORT).show();
+                String eventId = v.getTag(R.string.id).toString();
+                loadEventMembers(eventId,null,"accepted");
+
+                FrameLayout parentThatHasBottomSheetBehavior = (FrameLayout) mRecyclerViewFriend.getParent().getParent();
+                mBottomSheetBehavior = BottomSheetBehavior.from(parentThatHasBottomSheetBehavior);
+                if (mBottomSheetBehavior != null) {
+                    // setStateText(mBottomSheetBehavior.getState());
+                    mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                        @Override
+                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+
+                        }
+
+                        @Override
+                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                            //  setOffsetText(slideOffset);
+                        }
+                    });
+                }
+
+                View peakView = findViewById(R.id.drag_me);
+                mBottomSheetBehavior.setPeekHeight(peakView.getHeight());
+                // int state = mBottomSheetBehavior.getState();
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                peakView.requestLayout();
+
                 break;
             }
 

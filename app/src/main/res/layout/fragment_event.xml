@@ -98,34 +98,40 @@
 
     </LinearLayout>
 
-    <Button
-    android:id="@+id/btn_create_event"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-        android:layout_marginEnd="5dp"
-    android:text="Create Event"
-    app:layout_constraintTop_toBottomOf="@+id/event_end_linear"
-    app:layout_constraintEnd_toEndOf="@+id/event_end_linear"/>
-    <Button
-        android:id="@+id/btn_event_list"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="5dp"
-        android:text="My Event List"
-        app:layout_constraintTop_toBottomOf="@+id/event_end_linear"
-        app:layout_constraintEnd_toStartOf="@+id/btn_create_event"/>
+        android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="@+id/event_start_linear"
+        app:layout_constraintStart_toStartOf="@+id/event_start_linear"
+        app:layout_constraintTop_toBottomOf="@+id/event_end_linear">
 
-    <Button
-        android:id="@+id/btn_joined_event"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="5dp"
-        android:text="Joined Event List"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_end_linear"
-        app:layout_constraintEnd_toStartOf="@+id/btn_event_list"/>
+        <Button
+            android:id="@+id/btn_create_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Create Event"
+            />
+        <Button
+            android:id="@+id/btn_event_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="My Event List"
+            />
+
+        <Button
+            android:id="@+id/btn_joined_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Joined Event List"
+
+            />
+
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

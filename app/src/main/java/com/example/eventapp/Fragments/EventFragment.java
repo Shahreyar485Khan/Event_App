@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.eventapp.Activities.DisplayEventListActivity;
+import com.example.eventapp.Activities.DisplayJoinedEventListActivity;
 import com.example.eventapp.Activities.TestFragmentHolder;
 import com.example.eventapp.Interfaces.DatePickerInterface;
 import com.example.eventapp.R;
@@ -49,7 +50,7 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
     private OnFragmentInteractionListener mListener;
 
     TextView startTimeTv, startDateTv, endTimeTv, endDateTv;
-    Button createEvent,eventList;
+    Button createEvent,eventList,joinedEventList;
     EditText title, location, discription;
 
     /**
@@ -122,6 +123,7 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
 
         createEvent.setOnClickListener(this);
         eventList.setOnClickListener(this);
+        joinedEventList.setOnClickListener(this);
     }
 
     void initUi() {
@@ -131,6 +133,7 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
         endDateTv = getActivity().findViewById(R.id.event_end_date_tv);
         createEvent = getActivity().findViewById(R.id.btn_create_event);
         eventList = getActivity().findViewById(R.id.btn_event_list);
+        joinedEventList = getActivity().findViewById(R.id.btn_joined_event);
 
         title = getActivity().findViewById(R.id.title_et);
         location = getActivity().findViewById(R.id.location_et);
@@ -223,7 +226,7 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
             case R.id.btn_joined_event:{
 
                 Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
-               // startActivity(new Intent(getActivity(), DisplayEventListActivity.class));
+                startActivity(new Intent(getActivity(), DisplayJoinedEventListActivity.class));
                 break;
             }
 

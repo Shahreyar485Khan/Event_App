@@ -18,6 +18,7 @@ import com.example.eventapp.Interfaces.ResponseCallback;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -89,11 +90,6 @@ public class PhpMethodsUtils {
     }
 
 
-
-
-
-
-
     public void retrieveDataFromServer(String email, final ResponseCallback callback) {
 
 
@@ -105,7 +101,7 @@ public class PhpMethodsUtils {
                     try {
 
                         obj = new JSONArray(response);
-                        String str  = obj.getString(0);
+                        String str = obj.getString(0);
                         callback.onSuccess(str);
 
 
@@ -127,11 +123,6 @@ public class PhpMethodsUtils {
     }
 
 
-
-
-
-
-
     public Boolean getIdFromEmail(String email) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_GET_ID_BY_EMAIL,
@@ -144,7 +135,7 @@ public class PhpMethodsUtils {
                         try {
 
                             obj = new JSONArray(response);
-                            String  id = obj.getString(0);
+                            String id = obj.getString(0);
                             SharedPreferenceManager.getInstance(mCtx).saveRecipientID(id);
                             Log.d("phpMethodsUtils", id);
 
@@ -173,8 +164,7 @@ public class PhpMethodsUtils {
     }
 
 
-
-    public Boolean getNameFromID(){
+    public Boolean getNameFromID() {
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_GET_NAME_BY_ID,
@@ -188,7 +178,7 @@ public class PhpMethodsUtils {
                             obj = new JSONArray(response);
                             String name = null;
                             name = obj.getString(0);
-                          SharedPreferenceManager.getInstance(mCtx).saveSenderName(name);
+                            SharedPreferenceManager.getInstance(mCtx).saveSenderName(name);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -254,20 +244,52 @@ public class PhpMethodsUtils {
     }
 
 
-    public void sendRequestSharedPref(String recipientId, String email, String name) {
+    public void sendRequest(String id, String email, String name) {
 
         progressDialog = new ProgressDialog(mCtx);
-        progressDialog.setMessage("Sending Push");
+        progressDialog.setMessage("Sending Pushed..");
         progressDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_SEND_REQUEST,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_SEND_REQUEST_POST,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
 
-                        Log.d("phpMethodsUtils", response);
+                        Log.d("sendrequestmethod", response);
 
+                        JSONObject obj = null;
+
+                        try {
+                            obj = new JSONObject(response);
+                            String str = obj.getString("message");
+                            Toast.makeText(mCtx, "Response" + str, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                       /* JSONObject obj = null;
+                        try {
+                            obj = new JSONObject(response);
+                           // if (!obj.getBoolean("error")) {
+                                JSONArray jsonDevices = obj.getJSONArray("response");
+
+                                for (int i = 0; i < jsonDevices.length(); i++) {
+                                    JSONObject d = jsonDevices.getJSONObject(i);
+
+                                    Log.d("sendrequestmethod", d.getString("message"));
+                                    Log.d("sendrequestmethod", d.getString("message"));
+
+                                  //  currentDeviceId = d.getString("id");
+                                }
+
+                              //  Toast.makeText(mCtx, "" + currentDeviceId, Toast.LENGTH_SHORT).show();
+                           // }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }*/
                     }
                 },
                 new Response.ErrorListener() {
@@ -279,12 +301,12 @@ public class PhpMethodsUtils {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                String senderName = SharedPreferenceManager.getInstance(mCtx).getSenderName();
-                String recipientID = SharedPreferenceManager.getInstance(mCtx).getRecipientID();
+                //  String senderName = SharedPreferenceManager.getInstance(mCtx).getSenderName();
+                //  String recipientID = SharedPreferenceManager.getInstance(mCtx).getRecipientID();
                 params.put("sender", currentDeviceId);
-                params.put("recipient", recipientID);
+                params.put("recipient", id);
                 params.put("email", email);
-                params.put("name", senderName);
+                params.put("name", name);
 
                 return params;
             }
@@ -299,20 +321,20 @@ public class PhpMethodsUtils {
     public void sendRequestCallBack(String recipientId, String email, String name) {
 
         progressDialog = new ProgressDialog(mCtx);
-        progressDialog.setMessage("Sending Push");
+        progressDialog.setMessage("Sending Pushes...");
         progressDialog.show();
 
         getNameFromId(new ResponseCallback() {
             @Override
             public void onSuccess(String response) {
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_SEND_REQUEST,
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_SEND_REQUEST + "sender=" + currentDeviceId + "&recipient=" + recipientId + "&email=" + email + "&name=" + response,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 progressDialog.dismiss();
 
-                                Log.d("phpMethodsUtils", response);
+                                Log.d("sendRequestCallBack", response);
 
                             }
                         },
@@ -320,11 +342,11 @@ public class PhpMethodsUtils {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 progressDialog.dismiss();
-                                Log.d("errorOnerrorRes",error.getMessage());
+                                Log.d("errorOnerrorRes", error.getMessage());
                                 Toast.makeText(mCtx, "error" + error.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }) {
-                    @Override
+                  /*  @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> params = new HashMap<>();
 
@@ -334,7 +356,7 @@ public class PhpMethodsUtils {
                         params.put("name", response);
 
                         return params;
-                    }
+                    }*/
                 };
 
                 MyVolley.getInstance(mCtx).addToRequestQueue(stringRequest);
@@ -401,14 +423,14 @@ public class PhpMethodsUtils {
     }
 
 
-    public void acceptEventInvitation(String event_id,String sender_id, String req_status, String email, String name) {
+    public void acceptEventInvitation(String event_id, String sender_id, String req_status, String email, String name) {
 
         progressDialog = new ProgressDialog(mCtx);
 
         progressDialog.setMessage("Sending Push");
         progressDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_ACCEPT_EVENT_INVITATION+"event_id="+event_id+"&sender_id="+sender_id+"&recipient_id="+currentDeviceId+"&email="+email+"&name="+name+"&event_req_status="+req_status,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_ACCEPT_EVENT_INVITATION + "event_id=" + event_id + "&sender_id=" + sender_id + "&recipient_id=" + currentDeviceId + "&email=" + email + "&name=" + name + "&event_req_status=" + req_status,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -456,10 +478,9 @@ public class PhpMethodsUtils {
     }
 
 
+    public void addEvent(String title, String location, String description, String eventStartTime, String eventStartDate, String eventEndDate, String eventEndTime) {
 
-    public void addEvent( String title, String location, String description, String eventStartTime, String eventStartDate,String eventEndDate,String eventEndTime){
-
-       // getCurrentDevice();
+        // getCurrentDevice();
         progressDialog = new ProgressDialog(mCtx);
 
         progressDialog.setMessage("Sending Push");
@@ -470,13 +491,13 @@ public class PhpMethodsUtils {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                       progressDialog.dismiss();
+                        progressDialog.dismiss();
 
                         //Toast.makeText(mCtx, response, Toast.LENGTH_LONG).show();
                         try {
                             JSONObject obj = new JSONObject(response);
                             String str = obj.getString("message");
-                            Log.d("phpMethodUtilsjava" , response);
+                            Log.d("phpMethodUtilsjava", response);
                             Toast.makeText(mCtx, response, Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -486,7 +507,7 @@ public class PhpMethodsUtils {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                      //  progressDialog.dismiss();
+                        //  progressDialog.dismiss();
                         Toast.makeText(mCtx, error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {

@@ -106,6 +106,7 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
         holder.rejectButton.setTag(R.string.sender_name , nameStr);
         holder.rejectButton.setTag(R.string.sender_id , idStr);
         holder.rejectButton.setTag(R.string.sender_email , emailStr);
+        holder.rejectButton.setTag(R.string.event_id , event_idStr);
 
         holder.confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

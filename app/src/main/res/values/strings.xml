@@ -19,4 +19,6 @@
     <string name="sender_id">sender_id</string>
     <string name="event_id">sender_id</string>
 
+    <string name="wifi_mac_address">http://192.168.18.29/EventFcm/</string>
+
 </resources>

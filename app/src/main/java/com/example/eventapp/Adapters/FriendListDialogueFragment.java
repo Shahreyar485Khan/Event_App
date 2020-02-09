@@ -173,7 +173,9 @@ public class FriendListDialogueFragment extends DialogFragment  implements Frien
         progressDialog.setMessage("Fetching Devices...");
         progressDialog.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_FETCH_DEVICES,
+        EndPoints endPoints = new EndPoints(getActivity());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, endPoints.URL_FETCH_DEVICES,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

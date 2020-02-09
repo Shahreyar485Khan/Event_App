@@ -83,6 +83,12 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
         holder.btnJoinedMembers.setTag(R.string.id, idStr);
         holder.btnJoinedMembers.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
 
+        holder.btnEventUpdate.setTag(R.string.id, idStr);
+        holder.btnEventUpdate.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
+
+        holder.btnEventDelete.setTag(R.string.id, idStr);
+        holder.btnEventDelete.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
+
         holder.btnSendInvites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,6 +101,19 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
                 onClickListener.btnOnClick(view, position);
             }
         });
+        holder.btnEventUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickListener.btnOnClick(view, position);
+            }
+        });
+        holder.btnEventDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickListener.btnOnClick(view, position);
+            }
+        });
+
     }
 
     // total number of rows

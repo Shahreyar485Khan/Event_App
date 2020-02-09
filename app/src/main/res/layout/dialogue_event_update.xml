@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.EventFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <EditText
+        android:id="@+id/title_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:hint="Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/location_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:hint="Location"
+        app:layout_constraintEnd_toEndOf="@+id/title_et"
+        app:layout_constraintStart_toStartOf="@+id/title_et"
+        app:layout_constraintTop_toBottomOf="@+id/title_et" />
+
+    <EditText
+        android:id="@+id/discription_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:hint="Location"
+        app:layout_constraintEnd_toEndOf="@+id/title_et"
+        app:layout_constraintStart_toStartOf="@+id/title_et"
+        app:layout_constraintTop_toBottomOf="@+id/location_et" />
+
+    <LinearLayout
+        android:id="@+id/event_start_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="@+id/location_et"
+        app:layout_constraintStart_toStartOf="@+id/location_et"
+        app:layout_constraintTop_toBottomOf="@+id/discription_et">
+
+        <TextView
+            android:layout_weight="0.5"
+            android:id="@+id/event_start_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"/>
+        <TextView
+            android:layout_weight="1.5"
+            android:id="@+id/event_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/event_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/event_end_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="@+id/event_start_linear"
+        app:layout_constraintStart_toStartOf="@+id/event_start_linear"
+        app:layout_constraintTop_toBottomOf="@+id/event_start_linear">
+
+        <TextView
+            android:layout_weight="0.54"
+            android:id="@+id/event_end_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End"/>
+        <TextView
+            android:layout_weight="1.46"
+            android:id="@+id/event_end_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End"/>
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/event_end_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End"/>
+
+    </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:weightSum="3"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/event_start_linear"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/event_start_linear"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/event_end_linear">-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btn_create_event"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="Create Event"-->
+<!--            />-->
+<!--        <Button-->
+<!--            android:id="@+id/btn_event_list"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="My Event List"-->
+<!--            />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btn_joined_event"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="Joined Event List"-->
+
+<!--            />-->
+
+
+<!--    </LinearLayout>-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -127,8 +127,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
                 Bundle dateBundle = new Bundle();
                 dateBundle.putString("dateinmilli", dateInMilli.toString());
                 dateBundle.putString("date", dateClicked.toString());
-
-               /* RequestsFragment nextFrag= new RequestsFragment();
+/*
+                RequestsFragment nextFrag= new RequestsFragment();
                 nextFrag.setArguments(dateBundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, nextFrag, "findThisFragment")

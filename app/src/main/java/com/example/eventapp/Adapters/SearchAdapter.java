@@ -59,12 +59,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchAdap
 
         String nameStr = namesList.get(position);
         String emailStr = emailList.get(position);
-        String idStr = emailList.get(position);
+        String idStr = idList.get(position);
 
         holder.nameTextView.setText(nameStr);
 
         holder.sendButton.setTag(R.string.email, emailStr);
         holder.sendButton.setTag(R.string.name, nameStr);
+        holder.sendButton.setTag(R.string.id, idStr);
 //        holder.sendButton.setTag(idStr);
 
         holder.sendButton.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +95,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchAdap
     }
 
     public void setIdList(List<String> mIdList) {
-        emailList = mIdList;
+        idList = mIdList;
         notifyDataSetChanged();
     }
 

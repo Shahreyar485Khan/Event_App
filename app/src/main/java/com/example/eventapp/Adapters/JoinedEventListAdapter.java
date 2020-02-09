@@ -88,6 +88,9 @@ public class JoinedEventListAdapter extends RecyclerView.Adapter<JoinedEventList
      //   holder.btnSendInvites.setTag(R.string.name, nameStr);
         holder.btnLeaveEvent.setTag(R.string.event_id, event_idStr);
         holder.btnLeaveEvent.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
+        holder.btnLeaveEvent.setTag(R.string.sender_id, idStr);
+        holder.btnLeaveEvent.setTag(R.string.sender_name, nameStr);
+        holder.btnLeaveEvent.setTag(R.string.sender_email,emailStr);
 
         holder.btnLeaveEvent.setOnClickListener(new View.OnClickListener() {
             @Override

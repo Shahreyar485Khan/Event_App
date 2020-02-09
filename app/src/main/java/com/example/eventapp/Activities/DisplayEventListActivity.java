@@ -1,16 +1,26 @@
 package com.example.eventapp.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -22,11 +32,15 @@ import com.example.eventapp.Adapters.AllEventListAdapter;
 import com.example.eventapp.Adapters.FriendListAdapter;
 
 import com.example.eventapp.Adapters.JoinedMembersListAdapter;
+import com.example.eventapp.Fragments.TimePickerFragment;
+import com.example.eventapp.Interfaces.DatePickerInterface;
+import com.example.eventapp.Interfaces.TimePickerInterface;
 import com.example.eventapp.R;
 import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.example.eventapp.Utils.StringFormat;
+import com.example.eventapp.broadcast.NotificationPublisher;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.json.JSONArray;
@@ -34,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +56,8 @@ import java.util.Map;
 import static com.example.eventapp.Utils.PhpMethodsUtils.currentDeviceId;
 
 public class DisplayEventListActivity extends AppCompatActivity implements FriendListAdapter.AdapterListener, FriendListAdapter.FriendListAdapterOnClickHandler,
-                                                                        AllEventListAdapter.ItemClickListener,AllEventListAdapter.AdapterListener,JoinedMembersListAdapter.AdapterListener,JoinedMembersListAdapter.JoinedMembersListAdapterOnClickHandler{
+                                                                        AllEventListAdapter.ItemClickListener,AllEventListAdapter.AdapterListener,JoinedMembersListAdapter.AdapterListener,JoinedMembersListAdapter.JoinedMembersListAdapterOnClickHandler
+                                                                            , TimePickerInterface, DatePickerInterface {
     AllEventListAdapter adapter;
     Button btnSendInvites;
 
@@ -113,6 +129,24 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
        friendListAdapter = new FriendListAdapter(this, this,this);
        joinedMembersListAdapter = new JoinedMembersListAdapter(this, this,this);
+
+
+
+
+        boolean alarm = (PendingIntent.getBroadcast(this, 0, new Intent("ALARM"), PendingIntent.FLAG_NO_CREATE) == null);
+
+        if(alarm){
+            Intent itAlarm = new Intent("ALARM");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,itAlarm,0);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.SECOND, 3);
+            AlarmManager alarme = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarme.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),60000, pendingIntent);
+        }
+
+
+
 
       // loadAcceptedRequestDevices();
 
@@ -372,6 +406,92 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
     private void sendEventInvitation(String eventId,String senderId, String recipientId ,String recipientEmail) {
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Sending Push");
+        progressDialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_SEND_EVENT_INVITATION+"event_id="+eventId+"&sender_id="+senderId+"&recipient_id="+recipientId+"&recipient_email="+recipientEmail,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                       // progressDialog.dismiss();
+                        progressDialog.dismiss();
+                        Log.d("EventInvitation",response);
+
+                        JSONObject obj = null;
+
+                        try {
+                            obj = new JSONObject(response);
+                            String str = obj.getString("message");
+                            Toast.makeText(DisplayEventListActivity.this, "Response     " + str, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                      //  JSONObject obj = null;
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(DisplayEventListActivity.this, "Event invites"+error, Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }) {
+
+
+        };
+        MyVolley.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    private void deleteEvent(String eventId) {
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Sending Push");
+        progressDialog.show();
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_DELETE_EVENT+"event_id="+eventId,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                       // progressDialog.dismiss();
+                        progressDialog.dismiss();
+                        Log.d("EventInvitation",response);
+
+                        JSONObject obj = null;
+
+                        try {
+                            obj = new JSONObject(response);
+                            String str = obj.getString("message");
+                            Toast.makeText(DisplayEventListActivity.this, "Response     " + str, Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                      //  JSONObject obj = null;
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(DisplayEventListActivity.this, "Event invites"+error, Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }) {
+
+
+        };
+        MyVolley.getInstance(this).addToRequestQueue(stringRequest);
+    }
+  /*  private void deleteEvent(String eventId,String userId) {
+
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_SEND_EVENT_INVITATION+"event_id="+eventId+"&sender_id="+senderId+"&recipient_id="+recipientId+"&recipient_email="+recipientEmail,
@@ -396,7 +516,7 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
         };
         MyVolley.getInstance(this).addToRequestQueue(stringRequest);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -496,8 +616,47 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
                 break;
             }
+            case R.id.event_btn_update:{
 
 
+                scheduleNotification(getNotification("10 second delay"), 10000);
+
+
+             /*   Toast.makeText(this, "event update", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+// ...Irrelevant code for customizing the buttons and title
+                LayoutInflater inflater = this.getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.dialogue_event_update, null);
+                dialogBuilder.setView(dialogView);
+
+              //  EditText editText = (EditText) dialogView.findViewById(R.id.label_field);
+               // editText.setText("test label");
+
+                TextView textView = dialogView.findViewById(R.id.event_date_tv);
+
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        TimePickerFragment timePickerFragment = new TimePickerFragment();
+                        timePickerFragment.time(DisplayEventListActivity.this, textView);
+                        timePickerFragment.show(DisplayEventListActivity.this.getFragmentManager(), "TimePicker");
+                    }
+                });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();*/
+
+                break;
+            }
+            case R.id.event_btn_delete:{
+
+                String event_id = v.getTag(R.string.id).toString();
+                Toast.makeText(this, "eventid  "+event_id, Toast.LENGTH_SHORT).show();
+                deleteEvent(event_id);
+
+
+                break;
+            }
         }
 
 
@@ -505,9 +664,43 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
     }
 
+
+    private void scheduleNotification(Notification notification, int delay) {
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Scheduled Notification");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.home);
+        return builder.build();
+    }
+
+
+
+
     @Override
     public void onItemClick(View view, int position) {
 
+
+    }
+
+    @Override
+    public void onSetDate(String date, TextView textview) {
+
+    }
+
+    @Override
+    public void onSetTimeBtnClick(String time, TextView textView) {
 
     }
 }

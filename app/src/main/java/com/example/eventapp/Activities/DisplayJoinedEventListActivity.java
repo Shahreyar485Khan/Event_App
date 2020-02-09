@@ -31,7 +31,6 @@ import java.util.List;
 public class DisplayJoinedEventListActivity extends AppCompatActivity implements JoinedEventListAdapter.AdapterListener {
 
 
-
     private List<String> locationList;
     private List<String> event_idList;
     private List<String> titleList;
@@ -84,12 +83,7 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
         joinedEventListAdapter = new JoinedEventListAdapter(this, titleList, this);
 
 
-
     }
-
-
-
-
 
 
     public void getJoinedInvitationList(String reqStatus) {
@@ -100,12 +94,12 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
         progressDialog.show();
 
         //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_PENDING_INVITATION_LIST+"recipient_id="+PhpMethodsUtils.currentDeviceId+"&req_status="+reqStatus,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_PENDING_INVITATION_LIST + "recipient_id=" + PhpMethodsUtils.currentDeviceId + "&req_status=" + reqStatus,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
-                        Log.d("EventInvitationFragment",response);
+                        Log.d("EventInvitationFragment", response);
                         JSONObject obj = null;
                         try {
                             obj = new JSONObject(response);
@@ -159,8 +153,7 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
                                     event_end_date = StringFormat.removebrakets(event_end_date);
                                     event_end_date = StringFormat.removeQoutes(event_end_date);
 
-                                    Log.d("eventid","event id    "+event_id+"   event title "+event_title);
-
+                                    Log.d("eventid", "event id    " + event_id + "   event title " + event_title);
 
 
                                     senderName.add(sender_name);
@@ -182,7 +175,7 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
                                 }
 
 
-                                Log.d("RequestFragment", "check "+senderName);
+                                Log.d("RequestFragment", "check " + senderName);
                                 joinedEventListAdapter.setSenderList(senderName);
                                 joinedEventListAdapter.setIdList(id);
                                 joinedEventListAdapter.setEmailList(senderEmail);
@@ -210,36 +203,28 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
                         Toast.makeText(DisplayJoinedEventListActivity.this, "errorr", Toast.LENGTH_SHORT).show();
                     }
                 }) {
-           /* @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                Log.d("RequestFragment", "currentid "+ PhpMethodsUtils.currentDeviceId);
-                params.put("req_status", reqStatus);
-                params.put("recipient_id", PhpMethodsUtils.currentDeviceId);
 
-                return params;
-            }*/
         };
 
         MyVolley.getInstance(this).addToRequestQueue(stringRequest);
     }
 
 
-
-
-
-
-
-
-
     @Override
     public void btnOnClick(View v, int position) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
 
-            case R.id.event_btn_leave:{
+            case R.id.event_btn_leave: {
+
+                String sender_name = v.getTag(R.string.sender_name).toString();
+                String sender_email = v.getTag(R.string.sender_email).toString();
+                String event_id = v.getTag(R.string.event_id).toString();
+                String user_id = v.getTag(R.string.sender_id).toString();
 
                 Toast.makeText(this, "btn leave", Toast.LENGTH_SHORT).show();
+                phpMethodsUtils.acceptEventInvitation(event_id,user_id, "rejected",sender_email, sender_name);
+
 
             }
 

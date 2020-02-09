@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -50,7 +52,7 @@ import java.util.Map;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment implements SearchAdapter.SearchAdapterOnClickHandler, SearchAdapter.AdapterListener{
+public class SearchFragment extends Fragment implements SearchAdapter.SearchAdapterOnClickHandler, SearchAdapter.AdapterListener,View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -72,6 +74,10 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
     private RecyclerView recyclerView;
     SearchAdapter searchAdapter;
     PhpMethodsUtils phpMethodsUtils;
+
+    EditText txtSearchBar;
+    ImageView imgSearch;
+    EndPoints endPoints;
 
     String rec_id=null;
 
@@ -118,9 +124,14 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
     public void onStart() {
         super.onStart();
 
+        endPoints = new EndPoints(getActivity());
+
         devices = new ArrayList<>();
         id = new ArrayList<>();
         name = new ArrayList<>();
+
+        txtSearchBar = getActivity().findViewById(R.id.txt_search);
+        imgSearch = getActivity().findViewById(R.id.img_search);
 
         phpMethodsUtils = new PhpMethodsUtils(getActivity());
 
@@ -130,6 +141,8 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
         searchAdapter = new SearchAdapter(this, this, getActivity());
 
         loadRegisteredDevices();
+
+        imgSearch.setOnClickListener(this);
     }
 
 
@@ -154,9 +167,16 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
     //method to load all the devices from database
     private void loadRegisteredDevices() {
 
+
+
+
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Fetching Devices...");
         progressDialog.show();
+
+
+//        EndPoints endPoints = new EndPoints(getActivity());
+
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_FETCH_DEVICES,
                 new Response.Listener<String>() {
@@ -186,7 +206,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
 //                                listView.setAdapter(arrayAdapter);
                                 searchAdapter.setNamesList(name);
                                 searchAdapter.setEmailList(devices);
-//                                searchAdapter.setIdList(id);
+                                searchAdapter.setIdList(id);
                                 recyclerView.setAdapter(searchAdapter);
                             }
                         } catch (JSONException e) {
@@ -208,6 +228,71 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
     }
 
 
+    private void loadUserByEmail(String email) {
+
+        if (name != null){
+            name.clear();
+        }
+        if (id != null){
+            id.clear();
+        }
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Fetching Devices...");
+        progressDialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_USER_BY_EMAIL+"user_email="+email,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+
+                        Log.d("SearchFragment",response);
+
+                        JSONObject obj = null;
+                        try {
+                            obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+                                JSONArray jsonDevices = obj.getJSONArray("user");
+
+                                for (int i = 0; i < jsonDevices.length(); i++) {
+                                    JSONObject d = jsonDevices.getJSONObject(i);
+//                                    devices.add(d.getString("email"));
+                                    name.add(d.getString("user_fname")+" "+d.getString("user_lname"));
+                                   // devices.add(d.getString("email"));
+                                    id.add(d.getString("user_id"));
+
+                                }
+
+//                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+//                                        getActivity(),
+//                                        android.R.layout.simple_spinner_item,
+//                                        devices);
+
+//                                listView.setAdapter(arrayAdapter);
+                                searchAdapter.setNamesList(name);
+                                //searchAdapter.setEmailList(devices);
+                                searchAdapter.setIdList(id);
+                              //  searchAdapter.notifyDataSetChanged();
+                                recyclerView.setAdapter(searchAdapter);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getActivity(), ""+error, Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }) {
+
+        };
+        MyVolley.getInstance(getActivity()).addToRequestQueue(stringRequest);
+    }
 
     @Override
     public void onDetach() {
@@ -225,6 +310,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
 
         String email = v.getTag(R.string.email).toString();
         String name = v.getTag(R.string.name).toString();
+        String id = v.getTag(R.string.id).toString();
 
       //  phpMethodsUtils.getNameFromID();
 
@@ -239,8 +325,10 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
         Toast.makeText(getActivity(), "id " + temp_id + "email " + email, Toast.LENGTH_SHORT).show();
 */
 
+        phpMethodsUtils.sendRequest(id, email, name);
 
-        phpMethodsUtils.retrieveDataFromServer(email,new ResponseCallback(){
+
+      /*  phpMethodsUtils.retrieveDataFromServer(email,new ResponseCallback(){
             @Override
             public void onSuccess(String response){
                 //Get result from here
@@ -250,9 +338,27 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
                 phpMethodsUtils.sendRequestCallBack(String.valueOf(temp_id), email, name);
 
             }
-        });
+        });*/
 
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+
+            case R.id.img_search:{
+
+                String email = txtSearchBar.getText().toString();
+
+                loadUserByEmail(email);
+
+                Toast.makeText(getActivity(), "search a friend  "+name, Toast.LENGTH_SHORT).show();
+
+                break;
+            }
+
+        }
     }
 
     /**

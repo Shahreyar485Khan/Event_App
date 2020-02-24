@@ -1,35 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
-        <!--old layout-->
+    <!--old layout-->
 
-       <!-- <TextView
-            android:id="@+id/name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="4.5"
-            android:padding="8dp"
-            android:textSize="22dp"
-             />
+    <!-- <TextView
+         android:id="@+id/name_tv"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginStart="4dp"
+         android:layout_weight="4.5"
+         android:padding="8dp"
+         android:textSize="22dp"
+          />
 
-        <Button
-            android:id="@+id/send_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:padding="8dp"
-            android:elevation="20dp"
-            style="@style/Widget.MaterialComponents.Button"
-            android:textSize="10sp"
-            android:text="send Invites"
-           />-->
+     <Button
+         android:id="@+id/send_btn"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_weight=".5"
+         android:padding="8dp"
+         android:elevation="20dp"
+         style="@style/Widget.MaterialComponents.Button"
+         android:textSize="10sp"
+         android:text="send Invites"
+        />-->
 
-        <!--new Layout-->
+    <!--new Layout-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/card_bg"
+        android:elevation="@dimen/_5sdp"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,20 +48,23 @@
             android:padding="@dimen/_5sdp"
             android:weightSum="5">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="Title"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/_15sdp"/>
-                <TextView
-                    android:id="@+id/event_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4.5"
-                    android:text="test"
-                    android:textSize="@dimen/_13sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Title"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold"
+                android:textColor="@color/text_color"/>
+
+            <TextView
+                android:id="@+id/event_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:text="test"
+                android:textSize="@dimen/_13sdp"
+                android:textColor="@color/text_color"/>
         </LinearLayout>
 
         <LinearLayout
@@ -61,20 +74,23 @@
             android:padding="@dimen/_5sdp"
             android:weightSum="5">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="Location"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/_15sdp"/>
-                <TextView
-                    android:id="@+id/event_loc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4.5"
-                    android:text="test"
-                    android:textSize="@dimen/_13sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Location"
+                android:textSize="@dimen/_15sdp"
+                android:textColor="@color/text_color"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_loc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:textColor="@color/text_color"
+                android:text="test"
+                android:textSize="@dimen/_13sdp" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,20 +100,23 @@
             android:padding="@dimen/_5sdp"
             android:weightSum="5">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".6"
-                    android:text="Description"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/_15sdp"/>
-                <TextView
-                    android:id="@+id/event_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4.4"
-                    android:text="test"
-                    android:textSize="@dimen/_13sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="Description"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.4"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
         </LinearLayout>
 
         <LinearLayout
@@ -107,28 +126,32 @@
             android:padding="@dimen/_5sdp"
             android:weightSum="5">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="Start"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/_15sdp"/>
-                <TextView
-                    android:id="@+id/event_st_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.3"
-                    android:text="test"
-                    android:textSize="@dimen/_13sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Start"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/event_st_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.2"
-                    android:text="test"
-                    android:textSize="@dimen/_13sdp"/>
+            <TextView
+                android:id="@+id/event_st_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.3"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <TextView
+                android:id="@+id/event_st_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.2"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
         </LinearLayout>
 
         <LinearLayout
@@ -138,64 +161,200 @@
             android:padding="@dimen/_5sdp"
             android:weightSum="5">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="End"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/_15sdp"/>
-                <TextView
-                    android:id="@+id/event_end_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.3"
-                    android:text="test"
-                    android:textSize="@dimen/_13sdp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="End"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/event_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.2"
-                    android:text="test"
-                    android:textSize="@dimen/_13sdp"/>
+            <TextView
+                android:id="@+id/event_end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.3"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <TextView
+                android:id="@+id/event_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.2"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/_5sdp"
-            android:weightSum="5">
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_10sdp"
+            android:paddingStart="@dimen/_5sdp"
+            android:paddingEnd="@dimen/_5sdp"
+            android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/event_btn_update"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="Update"
-                  />
-                <Button
-                    android:id="@+id/event_btn_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.3"
-                    android:text="send invite" />
+            <LinearLayout
+                android:id="@+id/layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
 
-                <Button
+                <LinearLayout
                     android:id="@+id/event_btn_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.2"
-                    android:text="Delete" />
-                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_accept_request"
+                        >
+
+                        <ImageView
+                            android:id="@+id/crop"
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/del_event" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txt_crop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="Delete"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/purple" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/event_btn_send"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_accept_request"
+                        >
+                        <ImageView
+                            android:id="@+id/edit"
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/send_invites" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/txt_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="Invite"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/purple" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/event_btn_all_join"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.2"
-                    android:text="joined" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_accept_request"
+                        >
+
+                        <ImageView
+                            android:id="@+id/stitch"
+                            android:layout_width="@dimen/_35sdp"
+                            android:layout_height="@dimen/_35sdp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/members" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/txt_stitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="Members"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/purple" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
+
+
+
+       <!-- <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_5sdp"
+            android:weightSum="5">
+
+            <Button
+                android:id="@+id/event_btn_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Update"
+                android:textColor="@color/text_color"/>
+
+            <Button
+                android:id="@+id/event_btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.3"
+                android:text="send invite"
+                android:textColor="@color/text_color"/>
+
+            <Button
+                android:id="@+id/event_btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.2"
+                android:text="Delete"
+                android:textColor="@color/text_color"/>
+
+            <Button
+                android:id="@+id/event_btn_all_join"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.2"
+                android:text="joined"
+                android:textColor="@color/text_color"/>
+        </LinearLayout>-->
+    </LinearLayout>
 
 </LinearLayout>

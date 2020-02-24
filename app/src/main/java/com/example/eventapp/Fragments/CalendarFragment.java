@@ -1,5 +1,6 @@
 package com.example.eventapp.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,7 +10,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +21,26 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.eventapp.Activities.DisplayEventListActivity;
 import com.example.eventapp.Activities.ParentActivity;
+import com.example.eventapp.Adapters.FriendListAdapter;
+import com.example.eventapp.Adapters.UpcommingCreatedEventsAdapter;
 import com.example.eventapp.R;
+import com.example.eventapp.Utils.DateFormat;
 import com.example.eventapp.Utils.DateUtils;
+import com.example.eventapp.Utils.EndPoints;
+import com.example.eventapp.Utils.MyVolley;
+import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,13 +50,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.example.eventapp.Utils.PhpMethodsUtils.currentDeviceId;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link CalendarFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class CalendarFragment extends Fragment implements View.OnClickListener {
+public class CalendarFragment extends Fragment implements View.OnClickListener , UpcommingCreatedEventsAdapter.AdapterListener ,
+                                                            UpcommingCreatedEventsAdapter.UpcommingCreatedEventsAdapterOnClickHandler{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,6 +74,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
     private CompactCalendarView compactCalendarView;
+
+    private RecyclerView upcommingCreatedEvents ;
+    private ProgressDialog progressDialog;
+    private UpcommingCreatedEventsAdapter upcommingCreatedEventsAdapter;
+    private ArrayList<String> st_dateList,st_timeList,event_idList,titleList,locationList;
+    private List<Date> eventStartDates;
+    private PhpMethodsUtils phpMethodsUtils;
 
     private ActionBar toolbar;
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
@@ -96,8 +125,50 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
         super.onStart();
 
         dateUtils = new DateUtils();
+        st_dateList = new ArrayList<>();
+        st_timeList = new ArrayList<>();
+        titleList = new ArrayList<>();
+        locationList = new ArrayList<>();
 
-        compactCalendarView = (CompactCalendarView) getActivity().findViewById(R.id.compactcalendar_view);
+        event_idList = new ArrayList<>();
+        eventStartDates = new ArrayList<>();
+
+        phpMethodsUtils = new PhpMethodsUtils(getActivity());
+
+        compactCalendarView =  getActivity().findViewById(R.id.compactcalendar_view);
+
+        upcommingCreatedEvents = getActivity().findViewById(R.id.recent_created_events);
+
+        upcommingCreatedEvents.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+
+        upcommingCreatedEventsAdapter  = new UpcommingCreatedEventsAdapter(this, this,getActivity());
+
+        loadUpcommingCreatedDates();
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 100ms
+                if (eventStartDates.size()>0){
+
+
+                    Date nearestDate =  DateFormat.getNearestDate(eventStartDates, DateFormat.getCurrentDate());
+                    Toast.makeText(getActivity(), " Date not null "+nearestDate, Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Toast.makeText(getActivity(), " Date is null ", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }, 5000);
+
+
+
+     //  Date nearestDate =  DateFormat.getNearestDate(eventStartDates, DateFormat.getCurrentDate());
+
 
         // below allows you to configure color for the current day in the month
         // compactCalendarView.setCurrentDayBackgroundColor(getResources().getColor(R.color.black));
@@ -112,8 +183,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
         compactCalendarView.invalidate();
 
         //set initial title
-        toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        toolbar.setTitle(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+      //  toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+       // toolbar.setTitle(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
         //set title on calendar scroll
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -137,12 +208,12 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
 
 
 
-                EventFragment  nextFrag= new EventFragment();
+               /* EventFragment  nextFrag= new EventFragment();
                 nextFrag.setArguments(dateBundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment, nextFrag, "findThisFragment")
                         .addToBackStack(null)
-                        .commit();
+                        .commit();*/
 
 
 
@@ -180,9 +251,99 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
 
-        toolbar.setTitle(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+//        toolbar.setTitle(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
 
     }
+
+
+    public void loadUpcommingCreatedDates(){
+
+
+   phpMethodsUtils.getCurrentDevice();
+   Toast.makeText(getActivity(), "currrent id"+currentDeviceId , Toast.LENGTH_SHORT).show();
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("get Devices...");
+        progressDialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_TEST_ALL_EVENT+currentDeviceId,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+
+                        Log.d("DisplayEventList" , "get_all_events "+response);
+
+                        JSONObject obj = null;
+                        try {
+                            obj = new JSONObject(response);
+                            if (!obj.getBoolean("error")) {
+                                JSONArray jsonDevices = obj.getJSONArray("events");
+
+                                for (int i = 0; i < jsonDevices.length(); i++) {
+                                    JSONObject d = jsonDevices.getJSONObject(i);
+
+                                    String id = d.getString("id");
+                                    String st_date = d.getString("start_date");
+                                    String st_time = d.getString("start_time");
+                                    String title = d.getString("title");
+                                    String location = d.getString("location");
+
+                                    event_idList.add(id);
+                                    titleList.add(title);
+                                    locationList.add(location);
+                                    st_timeList.add(st_time);
+                                    st_dateList.add(st_date);
+
+                                    Log.d("keykey","start   "+st_date+st_time+title+location);
+
+
+                                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+                                  //  String dateInString = "07/06/2013";
+
+                                    try {
+
+                                        Date date = formatter.parse(st_date);
+                                        eventStartDates.add(date);
+
+
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+
+
+                                upcommingCreatedEventsAdapter.setEventIdList(event_idList);
+                                upcommingCreatedEventsAdapter.setSt_timeList(st_timeList);
+                                upcommingCreatedEventsAdapter.setSt_dateList(st_dateList);
+
+                                upcommingCreatedEvents.setAdapter(upcommingCreatedEventsAdapter);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getActivity(), ""+error, Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }) {
+
+
+
+        };
+        MyVolley.getInstance(getActivity()).addToRequestQueue(stringRequest);
+
+
+
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -220,11 +381,17 @@ public class CalendarFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
 
         Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
-//        EventFragment nextFrag= new EventFragment();
-//        getActivity().getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment, nextFrag, "findThisFragment")
-//                .addToBackStack(null)
-//                .commit();
+
+    }
+
+    @Override
+    public void onClick(String bookmarksStr) {
+
+    }
+
+    @Override
+    public void btnOnClick(View v, int position) {
+
     }
 
     /**

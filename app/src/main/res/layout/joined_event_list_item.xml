@@ -1,190 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
-        android:weightSum="5">
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/card_bg"
+        android:elevation="@dimen/_5sdp"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp">
 
-        <TextView
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="Invitation From"
-            android:textStyle="bold"
-            android:textSize="@dimen/_15sdp"/>
-        <TextView
-            android:id="@+id/event_invite_from"
-            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_5sdp"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Invitation From"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_invite_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4.5"
-            android:text="test"
-            android:textSize="@dimen/_13sdp"/>
+            android:orientation="horizontal"
+            android:padding="@dimen/_5sdp"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Title"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_5sdp"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Location"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_loc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.5"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_5sdp"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:text="Description"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.4"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_5sdp"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="Start"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_st_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.3"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <TextView
+                android:id="@+id/event_st_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.2"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/_5sdp"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:text="End"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/event_end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.3"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+
+            <TextView
+                android:id="@+id/event_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.2"
+                android:text="test"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_13sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/_5sdp"
+            android:weightSum="5">
+
+            <Button
+                android:id="@+id/event_btn_leave"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textSize="@dimen/_11sdp"
+                android:textColor="@color/purple"
+                android:drawableEnd="@drawable/btn_leave"
+
+                android:drawablePadding="@dimen/_1sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:background="@drawable/btn_reject_request"
+                android:text="Leave Event" />
+            <!-- <Button
+                 android:id="@+id/event_btn_reject"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 style="@style/Widget.MaterialComponents.Button"
+                 android:layout_weight="1"
+                 android:text="Not Interested" />-->
+
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
-        android:weightSum="5">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="Title"
-            android:textStyle="bold"
-            android:textSize="@dimen/_15sdp"/>
-        <TextView
-            android:id="@+id/event_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4.5"
-            android:text="test"
-            android:textSize="@dimen/_13sdp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
-        android:weightSum="5">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="Location"
-            android:textStyle="bold"
-            android:textSize="@dimen/_15sdp"/>
-        <TextView
-            android:id="@+id/event_loc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4.5"
-            android:text="test"
-            android:textSize="@dimen/_13sdp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
-        android:weightSum="5">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".6"
-            android:text="Description"
-            android:textStyle="bold"
-            android:textSize="@dimen/_15sdp"/>
-        <TextView
-            android:id="@+id/event_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4.4"
-            android:text="test"
-            android:textSize="@dimen/_13sdp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
-        android:weightSum="5">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="Start"
-            android:textStyle="bold"
-            android:textSize="@dimen/_15sdp"/>
-        <TextView
-            android:id="@+id/event_st_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.3"
-            android:text="test"
-            android:textSize="@dimen/_13sdp"/>
-
-        <TextView
-            android:id="@+id/event_st_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.2"
-            android:text="test"
-            android:textSize="@dimen/_13sdp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
-        android:weightSum="5">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:text="End"
-            android:textStyle="bold"
-            android:textSize="@dimen/_15sdp"/>
-        <TextView
-            android:id="@+id/event_end_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.3"
-            android:text="test"
-            android:textSize="@dimen/_13sdp"/>
-
-        <TextView
-            android:id="@+id/event_end_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.2"
-            android:text="test"
-            android:textSize="@dimen/_13sdp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
-        android:gravity="center"
-        android:weightSum="5">
-
-        <Button
-            android:id="@+id/event_btn_leave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_weight="1"
-            android:text="Leave Event"
-            />
-       <!-- <Button
-            android:id="@+id/event_btn_reject"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_weight="1"
-            android:text="Not Interested" />-->
-
-    </LinearLayout>
-
-
-
-
 </LinearLayout>

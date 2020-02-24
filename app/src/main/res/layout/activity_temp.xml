@@ -1,52 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/temp_activity_gradient"
     tools:context=".Activities.TempActivity">
 
+    <ImageView
+        android:layout_width="@dimen/_600sdp"
+        android:layout_height="@dimen/_300sdp"
+        android:src="@drawable/temp_activity_bg"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:weightSum="10">
 
-        >
 
-        <Button
-            android:id="@+id/btn_signup"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign Up"/>
+            android:layout_weight="6"
+            android:gravity="left|center"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/_18sdp"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="The Event"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_25sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="App"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_25sdp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="@dimen/_5sdp"
+                android:text="Create and manage your events"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_15sdp" />
 
 
-        <Button
-            android:id="@+id/btn_signin"
-            android:layout_width="wrap_content"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign In"/>
+            android:layout_weight="4"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_signin"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:background="@drawable/btn_sign_in"
+                android:text="Login"
+                android:textColor="@android:color/white"
+
+                />
+
+            <Button
+                android:id="@+id/btn_signup"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_sign_up"
+                android:text="Sign Up"
+                android:textColor="@color/purple" />
 
 
-       <!-- <Button
-            android:id="@+id/requ"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign up"/>
 
-
-        <Button
-            android:id="@+id/btn_signup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign up"/>-->
+        </LinearLayout>
 
     </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

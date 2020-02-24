@@ -1,5 +1,6 @@
 package com.example.eventapp.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
@@ -31,10 +32,12 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
     private TimePickerInterface onClickListener;
     TextView textView;
+    String status;
 
-    public void time(TimePickerInterface onClickListener, TextView textView){
+    public void time(String status,TimePickerInterface onClickListener, TextView textView){
         this.onClickListener = onClickListener;
         this.textView = textView;
+        this.status = status;
     }
 
     @Override
@@ -79,6 +82,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     }
 
     //onTimeSet() callback method
+    @SuppressLint("SimpleDateFormat")
     public void onTimeSet(TimePicker view, int hourOfDay, int minute){
         //Do something with the user chosen time
         //Get reference of host activity (XML Layout File) TextView widget
@@ -86,7 +90,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         //Set a message for user
 
         //Get the AM or PM for current time
-        String aMpM = "AM";
+     /*   String aMpM = "AM";
         if(hourOfDay >11)
         {
             aMpM = "PM";
@@ -137,8 +141,26 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
 
 
+*/
 
-        onClickListener.onSetTimeBtnClick(sqlStartDate.toString(), textView);
+        SimpleDateFormat _24HourSDF = null;
+        SimpleDateFormat _12HourSDF = null;
+        Date _24HourDt = null;
+        try {
+            String _24HourTime =String.valueOf(hourOfDay)+":"+String.valueOf(minute) ;
+             _24HourSDF = new SimpleDateFormat("HH:mm");
+             _12HourSDF = new SimpleDateFormat("hh:mm a");
+             _24HourDt = _24HourSDF.parse(_24HourTime);
+            System.out.println(_24HourDt);
+            System.out.println(_12HourSDF.format(_24HourDt));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        assert _12HourSDF != null;
+        assert _24HourDt != null;
+        onClickListener.onSetTimeBtnClick( status,hourOfDay,minute,_12HourSDF.format(_24HourDt), textView);
 
     }
 

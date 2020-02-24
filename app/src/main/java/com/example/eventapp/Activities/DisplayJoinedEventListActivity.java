@@ -147,11 +147,13 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
                                     String event_st_date = d.getString("event_st_date");
                                     event_st_date = StringFormat.removebrakets(event_st_date);
                                     event_st_date = StringFormat.removeQoutes(event_st_date);
+                                    event_st_date = StringFormat.removeSlash(event_st_date);
 
 
                                     String event_end_date = d.getString("event_end_date");
                                     event_end_date = StringFormat.removebrakets(event_end_date);
                                     event_end_date = StringFormat.removeQoutes(event_end_date);
+                                    event_end_date = StringFormat.removeSlash(event_end_date);
 
                                     Log.d("eventid", "event id    " + event_id + "   event title " + event_title);
 

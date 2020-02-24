@@ -4,5 +4,5 @@ import android.widget.TextView;
 
 public interface DatePickerInterface {
 
-    void onSetDate(String date, TextView textview);
+    void onSetDate(String status,int month,int dayOfMonth, int year,String date, TextView textview);
 }

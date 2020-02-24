@@ -13,6 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:gravity="center"
         android:text="Drag me!"
+        android:textColor="@color/text_color"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <androidx.recyclerview.widget.RecyclerView

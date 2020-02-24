@@ -22,6 +22,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.eventapp.Adapters.InvitationAdapter;
 import com.example.eventapp.Adapters.RequestAdapter;
 import com.example.eventapp.R;
+import com.example.eventapp.Utils.AlarmManagerUtils;
+import com.example.eventapp.Utils.DateFormat;
 import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
@@ -31,9 +33,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -73,6 +80,8 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
     private ProgressDialog progressDialog;
 
     PhpMethodsUtils phpMethodsUtils;
+    AlarmManagerUtils alarmManagerUtils;
+
 
 
     // TODO: Rename and change types of parameters
@@ -148,6 +157,7 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
         recipientName = new ArrayList<>();
 
         phpMethodsUtils = new PhpMethodsUtils(getActivity());
+        alarmManagerUtils = new AlarmManagerUtils((getActivity()));
 
         recyclerView = getActivity().findViewById(R.id.invitation_recycler_view);
         invitationAdapter = new InvitationAdapter(this, this, getActivity());
@@ -185,19 +195,35 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
         String name = v.getTag(R.string.sender_name).toString();
         String id = v.getTag(R.string.sender_id).toString();
         String event_id = v.getTag(R.string.event_id).toString();
-
+        String start_date = v.getTag(R.string.event_st_date).toString();
+        String end_date = v.getTag(R.string.event_end_date).toString();
+        String start_time = v.getTag(R.string.event_st_time).toString();
+        String end_time = v.getTag(R.string.event_end_time).toString();
+        String title = v.getTag(R.string.event_title).toString();
 
 
         if (v.getId() == R.id.event_btn_join) {
-           phpMethodsUtils.acceptEventInvitation(event_id,id, "accepted",email, name);
-            Toast.makeText(getActivity(), "join", Toast.LENGTH_SHORT).show();
+           boolean result =  phpMethodsUtils.acceptEventInvitation(event_id,id, "accepted",email, name);
+           if (result){
+
+
+
+               Calendar st_reminder = DateFormat.getAlarmCalender(start_time,start_date);
+               alarmManagerUtils.setEventReminder(title,st_reminder);
+               Calendar end_reminder = DateFormat.getAlarmCalender(end_time,end_date);
+               alarmManagerUtils.setEventReminder(title,end_reminder);
+
+           }else{
+               Toast.makeText(getActivity(), "Unable to accept invitation", Toast.LENGTH_SHORT).show();
+           }
+
         } else if (v.getId() == R.id.event_btn_reject) {
-            phpMethodsUtils.acceptEventInvitation(event_id,id, "rejected",email, name);
-            Toast.makeText(getActivity(), "not Intrested", Toast.LENGTH_SHORT).show();
+            boolean result = phpMethodsUtils.acceptEventInvitation(event_id, id, "rejected", email, name);
+            if (!result) {
+                Toast.makeText(getActivity(), "Unable to reject invitation", Toast.LENGTH_SHORT).show();
+            }
 
         }
-
-
     }
 
     @Override
@@ -209,6 +235,8 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
 
 
     public void getPendingInvitationList(String reqStatus) {
+
+
 
         progressDialog = new ProgressDialog(getActivity());
 
@@ -269,11 +297,13 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
                                     String event_st_date = d.getString("event_st_date");
                                     event_st_date = StringFormat.removebrakets(event_st_date);
                                     event_st_date = StringFormat.removeQoutes(event_st_date);
+                                    event_st_date = StringFormat.removeSlash(event_st_date);
 
 
                                     String event_end_date = d.getString("event_end_date");
                                     event_end_date = StringFormat.removebrakets(event_end_date);
                                     event_end_date = StringFormat.removeQoutes(event_end_date);
+                                    event_end_date = StringFormat.removeSlash(event_end_date);
 
                                     Log.d("eventid","event id    "+event_id+"   event title "+event_title);
 

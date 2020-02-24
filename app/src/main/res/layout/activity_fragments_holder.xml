@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
@@ -50,6 +51,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
+            android:background="@android:color/white"
+            android:elevation="@dimen/_25sdp"
+            app:tabIndicatorColor="@color/purple"
+            app:tabSelectedTextColor="@color/purple"
+            app:tabTextColor="@android:color/darker_gray"
             app:tabGravity="fill"
             app:tabMode="fixed" />
     </com.google.android.material.appbar.AppBarLayout>

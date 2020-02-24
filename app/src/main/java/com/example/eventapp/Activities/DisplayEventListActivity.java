@@ -1,5 +1,6 @@
 package com.example.eventapp.Activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +42,7 @@ import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.example.eventapp.Utils.StringFormat;
-import com.example.eventapp.broadcast.NotificationPublisher;
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.json.JSONArray;
@@ -49,6 +51,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +63,7 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
                                                                             , TimePickerInterface, DatePickerInterface {
     AllEventListAdapter adapter;
     Button btnSendInvites;
+    ImageView imgBack;
 
     private ArrayList<String> titleList;
     private List<String> locationList;
@@ -92,11 +96,6 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         setContentView(R.layout.activity_display_event_list);
 
 
-        /*Fragment fragment=new EventListFragment();
-        FragmentManager fragmentManager=getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment,fragment).commit();*/
-
-
         event_idList = new ArrayList<>();
         titleList = new ArrayList<>();
         locationList = new ArrayList<>();
@@ -106,6 +105,13 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         st_dateList = new ArrayList<>();
         end_dateList = new ArrayList<>();
 
+       // imgBack = findViewById(R.id.back);
+     /*   imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DisplayEventListActivity.super.onBackPressed();
+            }
+        });*/
 
 
         friendList = new ArrayList<>();
@@ -148,27 +154,6 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
 
 
-      // loadAcceptedRequestDevices();
-
-
-        /*FrameLayout parentThatHasBottomSheetBehavior = (FrameLayout) mRecyclerViewFriend.getParent().getParent();
-        mBottomSheetBehavior = BottomSheetBehavior.from(parentThatHasBottomSheetBehavior);
-        if (mBottomSheetBehavior != null) {
-           // setStateText(mBottomSheetBehavior.getState());
-            mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                @Override
-                public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-
-                }
-
-                @Override
-                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                  //  setOffsetText(slideOffset);
-                }
-            });
-        }
-*/
 
 
     }
@@ -490,33 +475,7 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         };
         MyVolley.getInstance(this).addToRequestQueue(stringRequest);
     }
-  /*  private void deleteEvent(String eventId,String userId) {
 
-
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_SEND_EVENT_INVITATION+"event_id="+eventId+"&sender_id="+senderId+"&recipient_id="+recipientId+"&recipient_email="+recipientEmail,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                       // progressDialog.dismiss();
-                        Log.d("EventInvitation",response);
-                      //  JSONObject obj = null;
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(DisplayEventListActivity.this, "Event invites"+error, Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
-                    }
-                }) {
-
-
-        };
-        MyVolley.getInstance(this).addToRequestQueue(stringRequest);
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -616,13 +575,13 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
                 break;
             }
-            case R.id.event_btn_update:{
+     /*       case R.id.event_btn_update:{
+
+                Toast.makeText(this, "setting", Toast.LENGTH_SHORT).show();
 
 
-                scheduleNotification(getNotification("10 second delay"), 10000);
 
-
-             /*   Toast.makeText(this, "event update", Toast.LENGTH_SHORT).show();
+             *//*   Toast.makeText(this, "event update", Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
 // ...Irrelevant code for customizing the buttons and title
                 LayoutInflater inflater = this.getLayoutInflater();
@@ -644,10 +603,10 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
                 });
 
                 AlertDialog alertDialog = dialogBuilder.create();
-                alertDialog.show();*/
+                alertDialog.show();*//*
 
                 break;
-            }
+            }*/
             case R.id.event_btn_delete:{
 
                 String event_id = v.getTag(R.string.id).toString();
@@ -665,25 +624,6 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
     }
 
 
-    private void scheduleNotification(Notification notification, int delay) {
-
-        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Scheduled Notification");
-        builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.home);
-        return builder.build();
-    }
 
 
 
@@ -694,13 +634,15 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
     }
 
+
+
     @Override
-    public void onSetDate(String date, TextView textview) {
+    public void onSetDate(String status,int month, int dayOfMonth, int year, String date, TextView textview) {
 
     }
 
     @Override
-    public void onSetTimeBtnClick(String time, TextView textView) {
+    public void onSetTimeBtnClick(String status,int hourOfDay, int minutes, String time, TextView textView) {
 
     }
 }

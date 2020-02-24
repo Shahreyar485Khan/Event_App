@@ -3,7 +3,6 @@ package com.example.eventapp.Utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -11,19 +10,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.eventapp.Activities.ParentActivity;
-import com.example.eventapp.Activities.SignUp;
 import com.example.eventapp.Interfaces.ResponseCallback;
+import com.example.eventapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PhpMethodsUtils {
@@ -367,9 +361,11 @@ public class PhpMethodsUtils {
 
     }
 
+    boolean server_result;
 
-    public void acceptRequest(String sender_id, String req_status, String email, String name) {
+    public boolean acceptRequest(String sender_id, String req_status, String email, String name) {
 
+        server_result = false;
         progressDialog = new ProgressDialog(mCtx);
 
         progressDialog.setMessage("Sending Push");
@@ -380,20 +376,18 @@ public class PhpMethodsUtils {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
-                        Toast.makeText(mCtx, "accepted dgdgdrr", Toast.LENGTH_LONG).show();
+                       // Toast.makeText(mCtx, "accepted dgdgdrr", Toast.LENGTH_LONG).show();
                         Log.d("phpMethodUtils", response);
                         JSONObject obj = null;
 
                         try {
                             obj = new JSONObject(response);
+                            String str = obj.getString("message");
+                            Toast.makeText(mCtx, "Response" + str, Toast.LENGTH_SHORT).show();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            //Toast.makeText(mCtx, "accepted" + obj.getString("message"), Toast.LENGTH_LONG).show();
-
                         }
-
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -411,20 +405,18 @@ public class PhpMethodsUtils {
                 params.put("email", email);
                 params.put("name", name);
 
-//                if (!TextUtils.isEmpty(image))
-//                    params.put("image", image);
-
-//                params.put("req_status", "pending");
                 return params;
             }
         };
 
         MyVolley.getInstance(mCtx).addToRequestQueue(stringRequest);
+        return server_result;
     }
 
 
-    public void acceptEventInvitation(String event_id, String sender_id, String req_status, String email, String name) {
+    public boolean acceptEventInvitation(String event_id, String sender_id, String req_status, String email, String name) {
 
+        server_result = false;
         progressDialog = new ProgressDialog(mCtx);
 
         progressDialog.setMessage("Sending Push");
@@ -435,52 +427,45 @@ public class PhpMethodsUtils {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
-                        Toast.makeText(mCtx, "accepted dgdgdrr", Toast.LENGTH_LONG).show();
+
                         Log.d("phpMethodUtils", response);
                         JSONObject obj = null;
 
                         try {
                             obj = new JSONObject(response);
+                            String str = obj.getString("message");
+
+                            if (str.equals(mCtx.getString(R.string.resp_successful))){
+
+                                server_result = true;
+                            }
+
+                            Toast.makeText(mCtx, "Response" + str, Toast.LENGTH_SHORT).show();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            //Toast.makeText(mCtx, "accepted" + obj.getString("message"), Toast.LENGTH_LONG).show();
-
                         }
-
-
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(mCtx, "error" + error.getMessage(), Toast.LENGTH_LONG).show();
+
                     }
                 }) {
-           /* @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("sender", sender_id);
-                params.put("recipient", currentDeviceId);
-                params.put("req_status", req_status);
-                params.put("email", email);
-                params.put("name", name);
 
-//                if (!TextUtils.isEmpty(image))
-//                    params.put("image", image);
-
-//                params.put("req_status", "pending");
-                return params;
-            }*/
         };
 
         MyVolley.getInstance(mCtx).addToRequestQueue(stringRequest);
+        return server_result;
     }
 
 
     public void addEvent(String title, String location, String description, String eventStartTime, String eventStartDate, String eventEndDate, String eventEndTime) {
 
         // getCurrentDevice();
+     //   server_result = false;
         progressDialog = new ProgressDialog(mCtx);
 
         progressDialog.setMessage("Sending Push");

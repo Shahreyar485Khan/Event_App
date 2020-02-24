@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#EC5036</color>
+    <color name="colorPrimaryDark">#A21A05</color>
+    <color name="colorAccent">#A5A3A3</color>
+
+    <color name="hint_color">#b3b3b3</color>
+    <color name="text_color">#666666</color>
+    <color name="accept">#74B57D</color>
+    <color name="reject">#DF8C8F</color>
+
 
     <color name="White">#FFFFFF</color>
     <color name="blue">#0D47A1</color>
+
+    <color name="pink">#EC5036</color>
+    <color name="purple">#C901E8</color>
 </resources>

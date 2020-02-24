@@ -1,6 +1,8 @@
 package com.example.eventapp.Adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.example.eventapp.Utils.PhpMethodsUtils;
 
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class JoinedEventListAdapter extends RecyclerView.Adapter<JoinedEventListAdapter.ViewHolders>{
@@ -198,6 +201,10 @@ public class JoinedEventListAdapter extends RecyclerView.Adapter<JoinedEventList
 
 
             btnLeaveEvent = itemView.findViewById(R.id.event_btn_leave);
+
+
+
+
            // btnEventUpdate = itemView.findViewById(R.id.event_btn_update);
            // btnEventDelete = itemView.findViewById(R.id.event_btn_delete);
            //  btnSendInvites.setOnClickListener(this);

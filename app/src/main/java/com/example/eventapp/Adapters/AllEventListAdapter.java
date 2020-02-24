@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.eventapp.R;
@@ -83,8 +84,8 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
         holder.btnJoinedMembers.setTag(R.string.id, idStr);
         holder.btnJoinedMembers.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
 
-        holder.btnEventUpdate.setTag(R.string.id, idStr);
-        holder.btnEventUpdate.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
+      // //////// holder.btnEventUpdate.setTag(R.string.id, idStr);
+       // ///////holder.btnEventUpdate.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
 
         holder.btnEventDelete.setTag(R.string.id, idStr);
         holder.btnEventDelete.setTag(R.string.user_id, PhpMethodsUtils.currentDeviceId);
@@ -101,12 +102,12 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
                 onClickListener.btnOnClick(view, position);
             }
         });
-        holder.btnEventUpdate.setOnClickListener(new View.OnClickListener() {
+      /*  holder.btnEventUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickListener.btnOnClick(view, position);
             }
-        });
+        });*/
         holder.btnEventDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,10 +181,10 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
         TextView txtEndTime;
         TextView txtEndDate;
 
-        Button btnSendInvites;
-        Button btnJoinedMembers;
-        Button btnEventUpdate;
-        Button btnEventDelete;
+        LinearLayout btnSendInvites;
+        LinearLayout btnJoinedMembers;
+        LinearLayout btnEventUpdate;
+        LinearLayout btnEventDelete;
 
         ViewHolders(View itemView) {
             super(itemView);
@@ -197,7 +198,7 @@ public class AllEventListAdapter extends RecyclerView.Adapter<AllEventListAdapte
 
 
             btnSendInvites = itemView.findViewById(R.id.event_btn_send);
-            btnEventUpdate = itemView.findViewById(R.id.event_btn_update);
+          //  btnEventUpdate = itemView.findViewById(R.id.event_btn_update);
             btnEventDelete = itemView.findViewById(R.id.event_btn_delete);
             btnJoinedMembers = itemView.findViewById(R.id.event_btn_all_join);
           //  btnSendInvites.setOnClickListener(this);

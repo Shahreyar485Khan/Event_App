@@ -3,6 +3,7 @@ package com.example.eventapp.Activities;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ public class SignIn extends BaseActivity implements View.OnClickListener {
     private EditText username, password;
     private Button signInBtn, signOutBtn;
     private String signInUsernameStr, signInPasswordStr;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class SignIn extends BaseActivity implements View.OnClickListener {
         password = findViewById(R.id.sign_in_password_et);
         signInBtn = findViewById(R.id.sign_in_btn);
         signOutBtn =findViewById(R.id.sign_in_out_btn);
+        progressDialog = new ProgressDialog(this);
 
         signInBtn.setOnClickListener(this);
         signOutBtn.setOnClickListener(this);
@@ -55,12 +58,14 @@ public class SignIn extends BaseActivity implements View.OnClickListener {
 //        showProgressBar();
 
         // [START sign_in_with_email]
+        progressDialog.show();
         mAuth.signInWithEmailAndPassword("sherry123@gmail.com", "1234567890")
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
+                            progressDialog.dismiss();
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(SignIn.this, "Signed In: "+user,

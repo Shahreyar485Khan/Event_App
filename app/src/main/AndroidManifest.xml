@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -19,10 +19,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activities.DisplayJoinedEventListActivity"></activity>
-        <activity android:name=".Activities.DisplayEventListActivity" />
-        <activity android:name=".Activities.FragmentsHolderActivity" />
-        <activity android:name=".Activities.TempActivity">
+
+        <activity android:name=".Activities.DisplayJoinedEventListActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".Activities.DisplayEventListActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".Activities.FragmentsHolderActivity"
+            android:windowSoftInputMode="adjustPan"
+        android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".Activities.TempActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,10 +36,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.ParentActivity" />
-        <activity android:name=".Activities.SignIn" />
+        <activity android:name=".Activities.SignIn"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".Activities.TestFragmentHolder" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".Activities.SignUp" />
+        <activity android:name=".Activities.SignUp"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".ActivitySendPushNotification" />
         <activity android:name=".BaseActivity" /> <!-- <service android:name=".FirebaseInstanceIDService"> -->
         <!-- <intent-filter> -->
@@ -46,7 +54,7 @@
             </intent-filter>
         </service>
 
-        <receiver
+       <!-- <receiver
             android:name=".broadcast.AlarmBroadcast"
             android:label="BroadcastReceiverAux">
             <intent-filter>
@@ -54,9 +62,14 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
 
-        <receiver android:name=".broadcast.NotificationPublisher" />
+        <receiver
+            android:name=".broadcast.AlarmBroadcast"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote" />
+
 
         <activity android:name=".MainActivity" />
     </application>

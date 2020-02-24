@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import com.example.eventapp.Interfaces.DatePickerInterface;
 import com.example.eventapp.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,11 +24,13 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     DatePickerInterface onSetDateListener;
     TextView textView;
+    String status;
 
-    public void date(DatePickerInterface onSetDateListener, TextView textView)
+    public void date(String status,DatePickerInterface onSetDateListener, TextView textView)
     {
         this.onSetDateListener = onSetDateListener;
         this.textView = textView;
+        this.status = status;
     }
 
     @Override
@@ -78,15 +83,32 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         TextView tv = (TextView) getActivity().findViewById(R.id.event_date_tv);
 
         SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
-        Date date = new Date(year, month, dayOfMonth-1);
+        Date date = new Date(year, month+1, dayOfMonth-1);
         String dayOfWeek = simpledateformat.format(date);
 
-        String dateStr = dayOfWeek+", "+month+"/"+dayOfMonth+"/"+year;
+        String dateStr = month+1+"/"+dayOfMonth+"/"+year;
+/*
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yy");
+        //Calendar cal = Calendar.getInstance();
+
+        try {
+            Date datee = formatter.parse(dateStr);
+
+         //   cal.setTime(date);
+            Log.d("date",datee.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }*/
+
+
+
+      //  date.toString();
+
 
 
 
 //        tv.setText(dayOfWeek+", "+month+"/"+dayOfMonth+"/"+year);
 
-        onSetDateListener.onSetDate(dateStr, textView);
+        onSetDateListener.onSetDate(status,month+1,dayOfMonth,year,dateStr, textView);
     }
 }

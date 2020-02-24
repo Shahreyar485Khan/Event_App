@@ -18,7 +18,16 @@
     <string name="sender_email">sender_email</string>
     <string name="sender_id">sender_id</string>
     <string name="event_id">sender_id</string>
+    <string name="event_title">event_title</string>
+    <string name="event_st_date">start_date</string>
+    <string name="event_st_time">start_time</string>
+    <string name="event_end_date">end_date</string>
+    <string name="event_end_time">end_time</string>
 
-    <string name="wifi_mac_address">http://192.168.18.29/EventFcm/</string>
+    <string name="resp_successful">Response successful</string>
+    <string name="resp_failure">Response failure</string>
+    <string name="resp_exist">Response exist</string>
+
+    <string name="wifi_mac_address">http://192.168.137.254/EventFcm/</string>
 
 </resources>

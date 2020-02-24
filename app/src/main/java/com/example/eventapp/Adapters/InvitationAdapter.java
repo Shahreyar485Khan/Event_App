@@ -102,6 +102,11 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.In
         holder.confirmButton.setTag(R.string.sender_id , idStr);
         holder.confirmButton.setTag(R.string.sender_email , emailStr);
         holder.confirmButton.setTag(R.string.event_id , event_idStr);
+        holder.confirmButton.setTag(R.string.event_st_date , start_date);
+        holder.confirmButton.setTag(R.string.event_st_time , start_time);
+        holder.confirmButton.setTag(R.string.event_end_date , end_date);
+        holder.confirmButton.setTag(R.string.event_end_time , end_time);
+        holder.confirmButton.setTag(R.string.event_title , title);
 
         holder.rejectButton.setTag(R.string.sender_name , nameStr);
         holder.rejectButton.setTag(R.string.sender_id , idStr);

@@ -23,5 +23,13 @@ public class StringFormat {
         return str;
     }
 
+    public static String removeSlash(String str){
+
+        str =  str.replace("\\", "");
+        Log.d(TAG, "Formatted String: "+str);
+
+        return str;
+    }
+
 
 }

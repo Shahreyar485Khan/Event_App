@@ -4,6 +4,6 @@ import android.widget.TextView;
 
 public interface TimePickerInterface {
 
-    void onSetTimeBtnClick(String time, TextView textView);
+    void onSetTimeBtnClick(String status,int hourOfDay,int minutes,String time, TextView textView);
 
 }

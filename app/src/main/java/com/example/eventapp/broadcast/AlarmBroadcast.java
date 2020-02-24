@@ -1,5 +1,6 @@
 package com.example.eventapp.broadcast;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,8 +11,10 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.eventapp.Activities.DisplayEventListActivity;
+import com.example.eventapp.Fragments.EventFragment;
 import com.example.eventapp.MainActivity;
 import com.example.eventapp.R;
 
@@ -21,13 +24,40 @@ import java.util.Date;
 
 import androidx.core.app.NotificationCompat;
 
+import static com.example.eventapp.Utils.AlarmManagerUtils.ALARM_ID;
+import static com.example.eventapp.Utils.AlarmManagerUtils.ALARM_TIME;
+import static com.example.eventapp.Utils.AlarmManagerUtils.TITLE_KEY;
+
 public class AlarmBroadcast extends BroadcastReceiver {
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        try {
+        Toast.makeText(context, "Alarm received!!", Toast.LENGTH_SHORT).show();
+
+        String event_title = intent.getStringExtra(TITLE_KEY);
+        long alarm_id = intent.getLongExtra(ALARM_ID,0);
+        long alarm_time = intent.getLongExtra(ALARM_TIME,0);
+
+        long current_time = System.currentTimeMillis();
+
+
+        Intent it =  new Intent(context, EventFragment.class);
+        createNotification(context, it, "new mensage", event_title, "this is a mensage");
+
+        cancelAlarm(context,alarm_id);
+
+      /*  if (alarm_time == current_time){
+
+            Intent it =  new Intent(context, EventFragment.class);
+            createNotification(context, it, "new mensage", event_title, "this is a mensage");
+
+            cancelAlarm(context,alarm_id);
+        }*/
+
+
+       /* try {
             String yourDate = "10/02/2020";
             String yourHour = "17:45:23";
             Date d = new Date();
@@ -39,7 +69,7 @@ public class AlarmBroadcast extends BroadcastReceiver {
             }
         }catch (Exception e){
             Log.i("date","error == "+e.getMessage());
-        }
+        }*/
 
     }
 
@@ -69,4 +99,14 @@ public class AlarmBroadcast extends BroadcastReceiver {
         catch(Exception e){}
     }
 
+    public void cancelAlarm(Context context,long alarmID){
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent myIntent = new Intent(context, AlarmBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,(int) alarmID, myIntent, 0);
+
+        alarmManager.cancel(pendingIntent);
+
+    }
 }

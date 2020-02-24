@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -82,7 +84,7 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
             @Override
             public void onPageSelected(int position) {
 
-            //    Toast.makeText(FragmentsHolderActivity.this, "onPageSelected", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -99,12 +101,15 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-             //   Toast.makeText(FragmentsHolderActivity.this, "onTabSelected", Toast.LENGTH_SHORT).show();
+                TextView tab_text = (TextView) tab.getCustomView();
+                tab_text.setTextColor(getResources().getColor(R.color.purple));
+
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                TextView tab_text = (TextView) tab.getCustomView();
+                tab_text.setTextColor(getResources().getColor(R.color.colorAccent));
             }
 
             @Override
@@ -135,35 +140,35 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
         tabOne.setText("Calender");
         tabOne.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tabOne.setTextSize(12);
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home, 0, 0);
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home_slc, 0, 0);
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
         TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabTwo.setText("Events");
         tabTwo.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tabTwo.setTextSize(12);
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home, 0, 0);
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.events_slc, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabTwo);
 
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabThree.setText("Requests");
+        tabThree.setText("Request");
         tabThree.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tabThree.setTextSize(12);
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home, 0, 0);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.request_slc, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabThree);
 
         TextView tabfour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabfour.setText("Search");
         tabfour.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tabfour.setTextSize(12);
-        tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home, 0, 0);
+        tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.search_slc, 0, 0);
         tabLayout.getTabAt(3).setCustomView(tabfour);
 
         TextView tabfive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabfive.setText("Invites");
         tabfive.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
         tabfive.setTextSize(12);
-        tabfive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home, 0, 0);
+        tabfive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.invites_slc, 0, 0);
         tabLayout.getTabAt(4).setCustomView(tabfive);
     }
 

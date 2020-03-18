@@ -31,6 +31,9 @@ import com.example.eventapp.Utils.DateUtils;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.example.eventapp.Utils.TextUtils;
 import com.example.eventapp.broadcast.AlarmBroadcast;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,6 +71,7 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
     public static final String END = "end";
     static int REQ = 1;
     Random random;
+    InterstitialAd interstitialAd;
 
     /**
      * Use this factory method to create a new instance of
@@ -176,6 +180,8 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
     }
 
     void initUi() {
+
+
         startTimeTv = getActivity().findViewById(R.id.event_time_tv);
         startDateTv = getActivity().findViewById(R.id.event_date_tv);
         endTimeTv = getActivity().findViewById(R.id.event_end_time_tv);
@@ -193,6 +199,8 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
         endDateTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         startDateTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
         startTimeTv.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+
+        reqNewInterstitial();
 
     }
 
@@ -267,7 +275,7 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
             }
             case R.id.btn_create_event:{
 
-                Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
 
 
                 String title_ = title.getText().toString();
@@ -306,7 +314,9 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
                         //The set Date/Time already passed
                         Toast.makeText(getActivity(), "Invalid Date/Time", Toast.LENGTH_LONG).show();
                     } else {
-                        phpMethodsUtils.addEvent(title_, location_, disc, start_time, start_date, end_date, end_time);
+                        phpMethodsUtils.getCurrentDevice();
+
+                        phpMethodsUtils.addEvent(PhpMethodsUtils.currentDeviceId,title_, location_, disc, start_time, start_date, end_date, end_time);
                         alarmManagerUtils.setEventReminder(title_,cal_event_start);
                         alarmManagerUtils.setEventReminder(title_,cal_event_end);
                     }
@@ -319,15 +329,51 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
             }
             case R.id.btn_event_list:{
 
-                Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getActivity(), DisplayEventListActivity.class));
+                //Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
+
+
+                if (interstitialAd.isLoaded()) {
+                    interstitialAd.show();
+                } else {
+                    reqNewInterstitial();
+                    startActivity(new Intent(getActivity(), DisplayEventListActivity.class));
+
+                }
+                interstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdClosed() {
+                        reqNewInterstitial();
+                        startActivity(new Intent(getActivity(), DisplayEventListActivity.class));
+
+                    }
+                });
+
+
+
                 break;
             }
 
             case R.id.btn_joined_event:{
 
-                Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getActivity(), DisplayJoinedEventListActivity.class));
+               // Toast.makeText(getActivity(), "listen", Toast.LENGTH_SHORT).show();
+
+                if (interstitialAd.isLoaded()) {
+                    interstitialAd.show();
+                } else {
+                    reqNewInterstitial();
+                    startActivity(new Intent(getActivity(), DisplayJoinedEventListActivity.class));
+
+                }
+                interstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdClosed() {
+                        reqNewInterstitial();
+                        startActivity(new Intent(getActivity(), DisplayJoinedEventListActivity.class));
+
+                    }
+                });
+
+
                 break;
             }
 
@@ -336,6 +382,11 @@ public class EventFragment extends Fragment implements View.OnClickListener, Tim
     }
 
 
+    public void reqNewInterstitial() {
+        interstitialAd = new InterstitialAd(getActivity());
+        interstitialAd.setAdUnitId(getResources().getString(R.string.Interstitial));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+    }
 
 
     @Override

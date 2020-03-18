@@ -5,15 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="10"
     android:background="@android:color/white"
     tools:context=".Activities.DisplayJoinedEventListActivity">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:alpha="100"
-        android:background="@drawable/temp_activity_gradient">
+        android:orientation="horizontal"
+        android:background="@drawable/temp_activity_light_gradient">
 
 
         <ImageView
@@ -29,8 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+           android:layout_gravity="center"
             android:text="Event App"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_15sdp" />
@@ -38,12 +40,33 @@
 
     </LinearLayout>
 
+
+    <TextView
+        android:id="@+id/empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Event joined Yet!"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_14sdp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:visibility="gone"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_joined_events"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
         android:visibility="visible"/>
 
+
+    <include
+        android:id="@+id/bannerad"
+        android:visibility="visible"
+
+        layout="@layout/banner" />
 
 </LinearLayout>

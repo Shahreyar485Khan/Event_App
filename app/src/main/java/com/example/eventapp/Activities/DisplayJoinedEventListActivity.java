@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -20,6 +21,9 @@ import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.example.eventapp.Utils.StringFormat;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +48,8 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
     private List<String> senderEmail;
     private List<String> id;
 
+    TextView txtEmpty;
+
 
     private ProgressDialog progressDialog;
 
@@ -51,6 +57,7 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
 
     private RecyclerView recyclerView;
     private JoinedEventListAdapter joinedEventListAdapter;
+    AdView adView;
 
 
     @Override
@@ -67,6 +74,7 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
         st_dateList = new ArrayList<>();
         end_dateList = new ArrayList<>();
 
+        txtEmpty = findViewById(R.id.empty_text);
 
         senderName = new ArrayList<>();
         senderEmail = new ArrayList<>();
@@ -82,6 +90,7 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
 
         joinedEventListAdapter = new JoinedEventListAdapter(this, titleList, this);
 
+        BannerAd();
 
     }
 
@@ -90,7 +99,7 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
 
         progressDialog = new ProgressDialog(this);
 
-        progressDialog.setMessage("Sending Push");
+        progressDialog.setMessage("Loading events...");
         progressDialog.show();
 
         //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
@@ -193,6 +202,14 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
 
 
                                 recyclerView.setAdapter(joinedEventListAdapter);
+
+
+                                if (joinedEventListAdapter.getItemCount() == 0){
+
+                                    txtEmpty.setVisibility(View.VISIBLE);
+                                }
+
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -210,6 +227,27 @@ public class DisplayJoinedEventListActivity extends AppCompatActivity implements
 
         MyVolley.getInstance(this).addToRequestQueue(stringRequest);
     }
+
+    private void BannerAd() {
+        adView = findViewById(R.id.bannerad);
+        AdRequest adrequest = new AdRequest.Builder()
+                .build();
+        adView.loadAd(adrequest);
+        adView.setAdListener(new AdListener() {
+
+            @Override
+            public void onAdLoaded() {
+                adView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int error) {
+                adView.setVisibility(View.GONE);
+            }
+
+        });
+    }
+
 
 
     @Override

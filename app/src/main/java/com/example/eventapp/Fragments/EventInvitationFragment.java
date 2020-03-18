@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,6 +29,9 @@ import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.example.eventapp.Utils.StringFormat;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,6 +85,7 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
 
     PhpMethodsUtils phpMethodsUtils;
     AlarmManagerUtils alarmManagerUtils;
+    TextView txtEmpty;
 
 
 
@@ -89,6 +94,7 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private InterstitialAd interstitialAd;
 
     public EventInvitationFragment() {
         // Required empty public constructor
@@ -150,6 +156,8 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
         st_dateList = new ArrayList<>();
         end_dateList = new ArrayList<>();
 
+        txtEmpty = getActivity().findViewById(R.id.empty_text);
+
 
         senderName = new ArrayList<>();
         senderEmail = new ArrayList<>();
@@ -160,10 +168,11 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
         alarmManagerUtils = new AlarmManagerUtils((getActivity()));
 
         recyclerView = getActivity().findViewById(R.id.invitation_recycler_view);
+        recyclerView.setVisibility(View.VISIBLE);
         invitationAdapter = new InvitationAdapter(this, this, getActivity());
 
 
-
+        reqNewInterstitial();
         getPendingInvitationList("pending");
     }
 
@@ -203,28 +212,63 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
 
 
         if (v.getId() == R.id.event_btn_join) {
-           boolean result =  phpMethodsUtils.acceptEventInvitation(event_id,id, "accepted",email, name);
-           if (result){
+
+
+            if (interstitialAd.isLoaded()) {
+                interstitialAd.show();
+            } else {
+                reqNewInterstitial();
+                boolean result =  phpMethodsUtils.acceptEventInvitation(event_id,id, "accepted",email, name);
+                // if (result){
 
 
 
-               Calendar st_reminder = DateFormat.getAlarmCalender(start_time,start_date);
-               alarmManagerUtils.setEventReminder(title,st_reminder);
-               Calendar end_reminder = DateFormat.getAlarmCalender(end_time,end_date);
-               alarmManagerUtils.setEventReminder(title,end_reminder);
+                Calendar st_reminder = DateFormat.getAlarmCalender(start_time,start_date);
+                alarmManagerUtils.setEventReminder(title,st_reminder);
+                Calendar end_reminder = DateFormat.getAlarmCalender(end_time,end_date);
+                alarmManagerUtils.setEventReminder(title,end_reminder);
 
-           }else{
-               Toast.makeText(getActivity(), "Unable to accept invitation", Toast.LENGTH_SHORT).show();
-           }
+            }
+            interstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    reqNewInterstitial();
+                    boolean result =  phpMethodsUtils.acceptEventInvitation(event_id,id, "accepted",email, name);
+                    // if (result){
+
+
+
+                    Calendar st_reminder = DateFormat.getAlarmCalender(start_time,start_date);
+                    alarmManagerUtils.setEventReminder(title,st_reminder);
+                    Calendar end_reminder = DateFormat.getAlarmCalender(end_time,end_date);
+                    alarmManagerUtils.setEventReminder(title,end_reminder);
+                }
+            });
+
+
+
+
+
+
+          // }else{
+         //      Toast.makeText(getActivity(), "Unable to accept invitation", Toast.LENGTH_SHORT).show();
+         //  }
 
         } else if (v.getId() == R.id.event_btn_reject) {
             boolean result = phpMethodsUtils.acceptEventInvitation(event_id, id, "rejected", email, name);
-            if (!result) {
-                Toast.makeText(getActivity(), "Unable to reject invitation", Toast.LENGTH_SHORT).show();
-            }
+          //  if (!result) {
+            //    Toast.makeText(getActivity(), "Unable to reject invitation", Toast.LENGTH_SHORT).show();
+           // }
 
         }
     }
+
+    public void reqNewInterstitial() {
+        interstitialAd = new InterstitialAd(getActivity());
+        interstitialAd.setAdUnitId(getResources().getString(R.string.Interstitial));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
 
     @Override
     public void onClick(String bookmarksStr) {
@@ -240,7 +284,7 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
 
         progressDialog = new ProgressDialog(getActivity());
 
-        progressDialog.setMessage("Sending Push");
+        progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
         //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
@@ -255,7 +299,7 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
                             obj = new JSONObject(response);
                             if (!obj.getBoolean("error")) {
 
-                                Toast.makeText(getActivity(), "IN", Toast.LENGTH_SHORT).show();
+                          //      Toast.makeText(getActivity(), "IN", Toast.LENGTH_SHORT).show();
                                 JSONArray jsonDevices = obj.getJSONArray("requests");
                               //  JSONArray jsonEvents = obj.getJSONArray("events");
 
@@ -344,6 +388,14 @@ public class EventInvitationFragment extends Fragment implements InvitationAdapt
 
 
                                 recyclerView.setAdapter(invitationAdapter);
+
+                                if (invitationAdapter.getItemCount() == 0){
+
+                                    recyclerView.setVisibility(View.GONE);
+                                    txtEmpty.setVisibility(View.VISIBLE);
+                                }
+
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

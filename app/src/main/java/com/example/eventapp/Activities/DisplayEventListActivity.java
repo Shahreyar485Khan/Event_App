@@ -43,6 +43,9 @@ import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.example.eventapp.Utils.StringFormat;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.json.JSONArray;
@@ -89,6 +92,8 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
     private JoinedMembersListAdapter joinedMembersListAdapter;
     private ProgressDialog progressDialog;
     private BottomSheetBehavior mBottomSheetBehavior;
+    private TextView txtEmpty;
+    private InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +109,7 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         end_timeList = new ArrayList<>();
         st_dateList = new ArrayList<>();
         end_dateList = new ArrayList<>();
+        txtEmpty = findViewById(R.id.empty_text);
 
        // imgBack = findViewById(R.id.back);
      /*   imgBack.setOnClickListener(new View.OnClickListener() {
@@ -123,14 +129,18 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         member_emailList = new ArrayList<>();
 
         mRecyclerViewEvent = findViewById(R.id.recycler_view_events);
+        mRecyclerViewEvent.setVisibility(View.VISIBLE);
         mRecyclerViewFriend = findViewById(R.id.recyclerview_bottom);
 
         mRecyclerViewEvent.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mRecyclerViewFriend.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
+        reqNewInterstitial();
         loadAllEvents();
 
         allEventListAdapter = new AllEventListAdapter(this, titleList,this);
+
+
 
 
        friendListAdapter = new FriendListAdapter(this, this,this);
@@ -160,7 +170,7 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
     private void loadAllEvents() {
 
-        Toast.makeText(this, "currrent id"+currentDeviceId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "currrent id"+currentDeviceId, Toast.LENGTH_SHORT).show();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("get Devices...");
@@ -207,6 +217,13 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
                                 allEventListAdapter.setEnd_dateList(end_dateList);
 
                                 mRecyclerViewEvent.setAdapter(allEventListAdapter);
+
+
+                                if (allEventListAdapter.getItemCount() == 0){
+
+                                    mRecyclerViewEvent.setVisibility(View.GONE);
+                                    txtEmpty.setVisibility(View.VISIBLE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -479,17 +496,67 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
 
     @Override
     public void onBackPressed() {
-        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        } else {
+
+        if (mBottomSheetBehavior != null){
+            if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            } else {
+                super.onBackPressed();
+            }
+        }else {
             super.onBackPressed();
         }
+
     }
+
+    public void reqNewInterstitial() {
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getResources().getString(R.string.Interstitial));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
 
     @Override
     public void onClick(String bookmarksStr) {
 
     }
+
+
+    private void sendEventInvites(View v){
+
+        loadAcceptedRequestDevices();
+        FrameLayout parentThatHasBottomSheetBehavior = (FrameLayout) mRecyclerViewFriend.getParent().getParent();
+        mBottomSheetBehavior = BottomSheetBehavior.from(parentThatHasBottomSheetBehavior);
+        if (mBottomSheetBehavior != null) {
+            // setStateText(mBottomSheetBehavior.getState());
+            mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    //  setOffsetText(slideOffset);
+                }
+            });
+        }
+
+
+        eventId = v.getTag(R.string.id).toString();
+
+        View peakView = findViewById(R.id.drag_me);
+        mBottomSheetBehavior.setPeekHeight(peakView.getHeight());
+        // int state = mBottomSheetBehavior.getState();
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        peakView.requestLayout();
+
+
+    }
+
+
+
     String eventId = null;
     @Override
     public void btnOnClick(View v, int position) {
@@ -501,36 +568,22 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
         switch (v.getId()){
 
             case R.id.event_btn_send:{
-                Toast.makeText(this, "send btn", Toast.LENGTH_SHORT).show();
 
-                loadAcceptedRequestDevices();
+                if (interstitialAd.isLoaded()) {
+                    interstitialAd.show();
+                } else {
+                    reqNewInterstitial();
+                    sendEventInvites(v);
 
-                FrameLayout parentThatHasBottomSheetBehavior = (FrameLayout) mRecyclerViewFriend.getParent().getParent();
-                mBottomSheetBehavior = BottomSheetBehavior.from(parentThatHasBottomSheetBehavior);
-                if (mBottomSheetBehavior != null) {
-                    // setStateText(mBottomSheetBehavior.getState());
-                    mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                        @Override
-                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-
-                        }
-
-                        @Override
-                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                            //  setOffsetText(slideOffset);
-                        }
-                    });
                 }
+                interstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdClosed() {
+                        reqNewInterstitial();
+                        sendEventInvites(v);
+                    }
+                });
 
-
-                eventId = v.getTag(R.string.id).toString();
-
-                View peakView = findViewById(R.id.drag_me);
-                mBottomSheetBehavior.setPeekHeight(peakView.getHeight());
-               // int state = mBottomSheetBehavior.getState();
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                peakView.requestLayout();
                 break;
             }
             case R.id.send_btn_friend:{
@@ -540,12 +593,10 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
                 sendEventInvitation(eventId,currentDeviceId,recipientId,recipientEmail);
                 Log.d("sending_invites","current_user_id    "+"event_id "+eventId+ currentDeviceId+"Recipient_id    "+recipientId+"recipient_email  "+recipientEmail);
 
-                Toast.makeText(this, "send event", Toast.LENGTH_SHORT).show();
                 break;
             }
             case R.id.event_btn_all_join:{
 
-                Toast.makeText(this, "Joined", Toast.LENGTH_SHORT).show();
                 String eventId = v.getTag(R.string.id).toString();
                 loadEventMembers(eventId,null,"accepted");
 
@@ -610,7 +661,6 @@ public class DisplayEventListActivity extends AppCompatActivity implements Frien
             case R.id.event_btn_delete:{
 
                 String event_id = v.getTag(R.string.id).toString();
-                Toast.makeText(this, "eventid  "+event_id, Toast.LENGTH_SHORT).show();
                 deleteEvent(event_id);
 
 

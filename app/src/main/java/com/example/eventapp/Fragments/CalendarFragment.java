@@ -2,14 +2,11 @@ package com.example.eventapp.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,16 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.eventapp.Activities.DisplayEventListActivity;
-import com.example.eventapp.Activities.ParentActivity;
-import com.example.eventapp.Adapters.FriendListAdapter;
 import com.example.eventapp.Adapters.UpcommingCreatedEventsAdapter;
 import com.example.eventapp.R;
 import com.example.eventapp.Utils.DateFormat;
@@ -36,7 +29,6 @@ import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +50,7 @@ import static com.example.eventapp.Utils.PhpMethodsUtils.currentDeviceId;
  * {@link CalendarFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class CalendarFragment extends Fragment implements View.OnClickListener , UpcommingCreatedEventsAdapter.AdapterListener ,
+public class CalendarFragment extends Fragment implements View.OnClickListener ,
                                                             UpcommingCreatedEventsAdapter.UpcommingCreatedEventsAdapterOnClickHandler{
 
     // TODO: Rename parameter arguments, choose names that match
@@ -78,7 +70,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener ,
     private RecyclerView upcommingCreatedEvents ;
     private ProgressDialog progressDialog;
     private UpcommingCreatedEventsAdapter upcommingCreatedEventsAdapter;
-    private ArrayList<String> st_dateList,st_timeList,event_idList,titleList,locationList;
+    private ArrayList<String> st_dateList,st_timeList,event_idList,titleList, descList;
     private List<Date> eventStartDates;
     private PhpMethodsUtils phpMethodsUtils;
 
@@ -128,10 +120,11 @@ public class CalendarFragment extends Fragment implements View.OnClickListener ,
         st_dateList = new ArrayList<>();
         st_timeList = new ArrayList<>();
         titleList = new ArrayList<>();
-        locationList = new ArrayList<>();
+        descList = new ArrayList<>();
 
         event_idList = new ArrayList<>();
         eventStartDates = new ArrayList<>();
+        progressDialog = new ProgressDialog(getActivity());
 
         phpMethodsUtils = new PhpMethodsUtils(getActivity());
 
@@ -139,20 +132,28 @@ public class CalendarFragment extends Fragment implements View.OnClickListener ,
 
         upcommingCreatedEvents = getActivity().findViewById(R.id.recent_created_events);
 
-        upcommingCreatedEvents.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+       // upcommingCreatedEvents.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+        upcommingCreatedEventsAdapter  = new UpcommingCreatedEventsAdapter( this,getActivity());
 
 
-        upcommingCreatedEventsAdapter  = new UpcommingCreatedEventsAdapter(this, this,getActivity());
+     //   loadUpcommingEventsDates();
 
-        loadUpcommingCreatedDates();
+        progressDialog.setMessage("Loading...");
 
+        progressDialog.show();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
+
+                progressDialog.dismiss();
+                loadUpcommingEventsDates();
+
                 //Do something after 100ms
-                if (eventStartDates.size()>0){
+              /*  if (eventStartDates.size()>0){
 
 
                     Date nearestDate =  DateFormat.getNearestDate(eventStartDates, DateFormat.getCurrentDate());
@@ -161,9 +162,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener ,
                 }else{
                     Toast.makeText(getActivity(), " Date is null ", Toast.LENGTH_SHORT).show();
 
-                }
+                }*/
             }
-        }, 5000);
+        }, 3000);
 
 
 
@@ -256,15 +257,16 @@ public class CalendarFragment extends Fragment implements View.OnClickListener ,
     }
 
 
-    public void loadUpcommingCreatedDates(){
+    public void loadUpcommingEventsDates(){
 
 
-   phpMethodsUtils.getCurrentDevice();
-   Toast.makeText(getActivity(), "currrent id"+currentDeviceId , Toast.LENGTH_SHORT).show();
+  // phpMethodsUtils.getCurrentDevice();
+   //Toast.makeText(getActivity(), "currrent id"+currentDeviceId , Toast.LENGTH_SHORT).show();
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("get Devices...");
+
+        progressDialog.setMessage("Loading upcoming events...");
         progressDialog.show();
+      //  phpMethodsUtils.getCurrentDevice();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_TEST_ALL_EVENT+currentDeviceId,
                 new Response.Listener<String>() {
@@ -287,18 +289,20 @@ public class CalendarFragment extends Fragment implements View.OnClickListener ,
                                     String st_date = d.getString("start_date");
                                     String st_time = d.getString("start_time");
                                     String title = d.getString("title");
-                                    String location = d.getString("location");
+                                    String description = d.getString("description");
 
                                     event_idList.add(id);
                                     titleList.add(title);
-                                    locationList.add(location);
+                                    descList.add(description);
                                     st_timeList.add(st_time);
                                     st_dateList.add(st_date);
 
-                                    Log.d("keykey","start   "+st_date+st_time+title+location);
+                                    Log.d("keykey","start   "+st_date+st_time+title+description);
 
 
-                                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
+
+                                  /*  SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
                                   //  String dateInString = "07/06/2013";
 
                                     try {
@@ -309,12 +313,14 @@ public class CalendarFragment extends Fragment implements View.OnClickListener ,
 
                                     } catch (ParseException e) {
                                         e.printStackTrace();
-                                    }
+                                    }*/
 
                                 }
 
 
                                 upcommingCreatedEventsAdapter.setEventIdList(event_idList);
+                                upcommingCreatedEventsAdapter.setTitleList(titleList);
+                                upcommingCreatedEventsAdapter.setDescList(descList);
                                 upcommingCreatedEventsAdapter.setSt_timeList(st_timeList);
                                 upcommingCreatedEventsAdapter.setSt_dateList(st_dateList);
 
@@ -389,10 +395,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener ,
 
     }
 
-    @Override
-    public void btnOnClick(View v, int position) {
 
-    }
 
     /**
      * This interface must be implemented by activities that contain this

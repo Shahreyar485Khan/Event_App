@@ -141,11 +141,6 @@ public class EventListFragment extends Fragment implements EventListAdapter.Adap
 
         loadAllEvents();
 
-
-
-
-
-
     }
 
 
@@ -257,10 +252,10 @@ public class EventListFragment extends Fragment implements EventListAdapter.Adap
 
     private void loadAllEvents() {
 
-        Toast.makeText(getActivity(), "currrent id"+currentDeviceId, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(getActivity(), "currrent id"+currentDeviceId, Toast.LENGTH_SHORT).show();
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Fetching Devices...");
+        progressDialog.setMessage("Loading events...");
         progressDialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_TEST_ALL_EVENT+currentDeviceId,

@@ -33,21 +33,21 @@ public class UpcommingCreatedEventsAdapter extends RecyclerView.Adapter<Upcommin
 
 
     final private UpcommingCreatedEventsAdapter.UpcommingCreatedEventsAdapterOnClickHandler mClickHandler;
-    private final UpcommingCreatedEventsAdapter.AdapterListener onClickListener;
+  //  private final UpcommingCreatedEventsAdapter.AdapterListener onClickListener;
 
     public interface UpcommingCreatedEventsAdapterOnClickHandler {
         void onClick(String bookmarksStr);
     }
 
     //region Interface adapter listener
-    public interface AdapterListener {
+    /*public interface AdapterListener {
 
         void btnOnClick(View v, int position);
-    }
+    }*/
 
-    public UpcommingCreatedEventsAdapter(UpcommingCreatedEventsAdapter.UpcommingCreatedEventsAdapterOnClickHandler handler, UpcommingCreatedEventsAdapter.AdapterListener listener, Context context) {
+    public UpcommingCreatedEventsAdapter(UpcommingCreatedEventsAdapter.UpcommingCreatedEventsAdapterOnClickHandler handler, Context context) {
         mClickHandler = handler;
-        this.onClickListener = listener;
+      //  this.onClickListener = listener;
     }
 
     @NonNull
@@ -72,9 +72,9 @@ public class UpcommingCreatedEventsAdapter extends RecyclerView.Adapter<Upcommin
       //  String idStr = idList.get(position);
 
         String title = titleList.get(position);
-        String location = locationList.get(position);
-        String event_idStr = event_idList.get(position);
-       // String desc = descList.get(position);
+      //  String location = locationList.get(position);
+      //  String event_idStr = event_idList.get(position);
+        String desc = descList.get(position);
         String start_time = st_timeList.get(position);
       //  String end_time = end_timeList.get(position);
         String start_date = st_dateList.get(position);
@@ -84,7 +84,7 @@ public class UpcommingCreatedEventsAdapter extends RecyclerView.Adapter<Upcommin
       //  Log.d("invitation_Adapter","name   "+nameStr+" email "+emailStr+" id  " + idStr);
 
         holder.txtTitle.setText(title);
-        holder.txtLocation.setText(location);
+        holder.txtDesc.setText(desc);
       //  holder.txtDesc.setText(desc);
         holder.txtStTime.setText(start_time);
      ///   holder.txtEndTime.setText(end_time);
@@ -100,41 +100,41 @@ public class UpcommingCreatedEventsAdapter extends RecyclerView.Adapter<Upcommin
     //    holder.confirmButton.setTag(R.string.sender_name , nameStr);
     //    holder.confirmButton.setTag(R.string.sender_id , idStr);
     //    holder.confirmButton.setTag(R.string.sender_email , emailStr);
-        holder.confirmButton.setTag(R.string.event_id , event_idStr);
-        holder.confirmButton.setTag(R.string.event_st_date , start_date);
-        holder.confirmButton.setTag(R.string.event_st_time , start_time);
-     //   holder.confirmButton.setTag(R.string.event_end_date , end_date);
-     //   holder.confirmButton.setTag(R.string.event_end_time , end_time);
-        holder.confirmButton.setTag(R.string.event_title , title);
+//        holder.confirmButton.setTag(R.string.event_id , event_idStr);
+//        holder.confirmButton.setTag(R.string.event_st_date , start_date);
+//        holder.confirmButton.setTag(R.string.event_st_time , start_time);
+//     //   holder.confirmButton.setTag(R.string.event_end_date , end_date);
+//     //   holder.confirmButton.setTag(R.string.event_end_time , end_time);
+//        holder.confirmButton.setTag(R.string.event_title , title);
+//
+//      //  holder.rejectButton.setTag(R.string.sender_name , nameStr);
+//      //  holder.rejectButton.setTag(R.string.sender_id , idStr);
+//      //  holder.rejectButton.setTag(R.string.sender_email , emailStr);
+//        holder.rejectButton.setTag(R.string.event_id , event_idStr);
 
-      //  holder.rejectButton.setTag(R.string.sender_name , nameStr);
-      //  holder.rejectButton.setTag(R.string.sender_id , idStr);
-      //  holder.rejectButton.setTag(R.string.sender_email , emailStr);
-        holder.rejectButton.setTag(R.string.event_id , event_idStr);
-
-        holder.confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                onClickListener.btnOnClick(v, position);
-            }
-        });
+//        holder.confirmButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                onClickListener.btnOnClick(v, position);
+//            }
+//        });
 
 
-        holder.rejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                onClickListener.btnOnClick(v, position);
-            }
-        });
+//        holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                onClickListener.btnOnClick(v, position);
+//            }
+//        });
     }
 
     @Override
     public int getItemCount() {
-        if (namesList == null)
+        if (titleList == null)
             return 0;
-        return namesList.size();
+        return titleList.size();
     }
 
     public void setSenderList(List<String> mNamesList) {
@@ -202,13 +202,13 @@ public class UpcommingCreatedEventsAdapter extends RecyclerView.Adapter<Upcommin
     public class UpcommingCreatedEventsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         //final TextView nameTextView;
-        final Button confirmButton;
-        final Button rejectButton;
+      //  final Button confirmButton;
+      //  final Button rejectButton;
 
 
       //  TextView txtInviteFrom;
         TextView txtTitle;
-        TextView txtLocation;
+        TextView txtDesc;
       //  TextView txtDesc;
         TextView txtStTime;
         TextView txtStDate;
@@ -223,15 +223,15 @@ public class UpcommingCreatedEventsAdapter extends RecyclerView.Adapter<Upcommin
 
           //  txtInviteFrom = itemView.findViewById(R.id.event_invite_from);
             txtTitle = itemView.findViewById(R.id.event_title);
-            txtLocation = itemView.findViewById(R.id.event_loc);
+            txtDesc = itemView.findViewById(R.id.event_desc);
           //  txtDesc = itemView.findViewById(R.id.event_desc);
             txtStDate = itemView.findViewById(R.id.event_st_date);
             txtStTime = itemView.findViewById(R.id.event_st_time);
           //  txtEndDate = itemView.findViewById(R.id.event_end_date);
            // txtEndTime = itemView.findViewById(R.id.event_end_time);
 
-            confirmButton = itemView.findViewById(R.id.event_btn_join);
-            rejectButton = itemView.findViewById(R.id.event_btn_reject);
+         //   confirmButton = itemView.findViewById(R.id.event_btn_join);
+         //   rejectButton = itemView.findViewById(R.id.event_btn_reject);
 
             itemView.setOnClickListener(this);
         }

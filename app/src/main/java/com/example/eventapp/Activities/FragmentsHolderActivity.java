@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
@@ -27,6 +28,11 @@ import com.example.eventapp.R;
 import com.example.eventapp.Utils.Constants;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.example.eventapp.Utils.ViewPagerNoSwipe;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -44,6 +50,8 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
     ViewPagerNoSwipe viewPager;
     PhpMethodsUtils phpMethodsUtils;
     private FirebaseAuth mAuth;
+    AdView adView;
+    InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +76,9 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
         Constants.currentUser = mAuth.getCurrentUser();
         phpMethodsUtils.getCurrentDevice();
 
+        MobileAds.initialize(this,getResources().getString(R.string.app_id));
 
-
+        reqNewInterstitial();
 
 
 
@@ -104,6 +113,24 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
                 TextView tab_text = (TextView) tab.getCustomView();
                 tab_text.setTextColor(getResources().getColor(R.color.purple));
 
+                if (interstitialAd.isLoaded()) {
+                    interstitialAd.show();
+                } else {
+
+
+
+                }
+                interstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdClosed() {
+
+                        reqNewInterstitial();
+
+
+                    }
+                });
+
+
             }
 
             @Override
@@ -122,6 +149,13 @@ public class FragmentsHolderActivity extends AppCompatActivity implements Calend
 
     }
 
+
+
+    public void reqNewInterstitial() {
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getResources().getString(R.string.Interstitial));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+    }
 
     private void setupViewPager(ViewPagerNoSwipe viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());

@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -72,6 +73,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
     private Spinner spinner;
     private ListView listView;
     private RecyclerView recyclerView;
+    private TextView txtEmpty;
     SearchAdapter searchAdapter;
     PhpMethodsUtils phpMethodsUtils;
 
@@ -132,6 +134,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
 
         txtSearchBar = getActivity().findViewById(R.id.txt_search);
         imgSearch = getActivity().findViewById(R.id.img_search);
+        txtEmpty = getActivity().findViewById(R.id.empty_text);
 
         phpMethodsUtils = new PhpMethodsUtils(getActivity());
 
@@ -208,6 +211,13 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
                                 searchAdapter.setEmailList(devices);
                                 searchAdapter.setIdList(id);
                                 recyclerView.setAdapter(searchAdapter);
+
+
+                              /*  if (searchAdapter.getItemCount() == 0){
+
+                                    txtEmpty.setVisibility(View.VISIBLE);
+                                }*/
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -238,7 +248,7 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
         }
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Fetching Devices...");
+        progressDialog.setMessage("Fetching Users...");
         progressDialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_GET_USER_BY_EMAIL+"user_email="+email,
@@ -275,6 +285,13 @@ public class SearchFragment extends Fragment implements SearchAdapter.SearchAdap
                                 searchAdapter.setIdList(id);
                               //  searchAdapter.notifyDataSetChanged();
                                 recyclerView.setAdapter(searchAdapter);
+
+
+                                if (searchAdapter.getItemCount() == 0){
+
+                                    txtEmpty.setVisibility(View.VISIBLE);
+                                }
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,6 +26,9 @@ import com.example.eventapp.Utils.EndPoints;
 import com.example.eventapp.Utils.MyVolley;
 import com.example.eventapp.Utils.PhpMethodsUtils;
 import com.example.eventapp.Utils.StringFormat;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +61,8 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
 
     private RecyclerView recyclerView;
     private RequestAdapter requestAdapter;
+    private TextView txtEmpty;
+    private InterstitialAd interstitialAd;
 
     public RequestsFragment() {
         // Required empty public constructor
@@ -110,7 +116,14 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
         phpMethodsUtils = new PhpMethodsUtils(getActivity());
 
         recyclerView = getActivity().findViewById(R.id.requests_recycler_view);
+        recyclerView.setVisibility(View.VISIBLE);
+        txtEmpty = getActivity().findViewById(R.id.empty_text);
         requestAdapter = new RequestAdapter(this, this, getActivity());
+
+        reqNewInterstitial();
+        getPendingRequestList("pending");
+
+
 
 //        devices = new ArrayList<>();
 //        id = new ArrayList<>();
@@ -125,7 +138,7 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
 
 //        loadRegisteredDevices();
 
-        getPendingRequestList("pending");
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -173,13 +186,56 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
 
 
         if (v.getId() == R.id.confirm_btn) {
-            phpMethodsUtils.acceptRequest(id, "accepted",email, name);
+
+            if (interstitialAd.isLoaded()) {
+                interstitialAd.show();
+            } else {
+                reqNewInterstitial();
+                phpMethodsUtils.acceptRequest(id, "accepted",email, name);
+
+            }
+            interstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    reqNewInterstitial();
+                    phpMethodsUtils.acceptRequest(id, "accepted",email, name);
+                }
+            });
+
+
+
         } else if (v.getId() == R.id.reject_btn) {
-            phpMethodsUtils.acceptRequest(id,"rejected",email,name);
+
+            if (interstitialAd.isLoaded()) {
+                interstitialAd.show();
+            } else {
+                reqNewInterstitial();
+                phpMethodsUtils.acceptRequest(id,"rejected",email,name);
+
+            }
+            interstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    reqNewInterstitial();
+                    phpMethodsUtils.acceptRequest(id,"rejected",email,name);
+                }
+            });
+
+
+
+
+
         }
 
 
     }
+
+    public void reqNewInterstitial() {
+        interstitialAd = new InterstitialAd(getActivity());
+        interstitialAd.setAdUnitId(getResources().getString(R.string.Interstitial));
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -221,7 +277,6 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
                             obj = new JSONObject(response);
                             if (!obj.getBoolean("error")) {
 
-                                Toast.makeText(getActivity(), "IN", Toast.LENGTH_SHORT).show();
                                 JSONArray jsonDevices = obj.getJSONArray("requests");
 
                                 for (int i = 0; i < jsonDevices.length(); i++) {
@@ -273,7 +328,7 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
 
         progressDialog = new ProgressDialog(getActivity());
 
-        progressDialog.setMessage("Sending Push");
+        progressDialog.setMessage("Loading request list...");
         progressDialog.show();
 
         //Toast.makeText(getActivity(), "out", Toast.LENGTH_SHORT).show();
@@ -287,7 +342,7 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
                             obj = new JSONObject(response);
                             if (!obj.getBoolean("error")) {
 
-                                Toast.makeText(getActivity(), "IN", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getActivity(), "IN", Toast.LENGTH_SHORT).show();
                                 JSONArray jsonDevices = obj.getJSONArray("requests");
 
                                 for (int i = 0; i < jsonDevices.length(); i++) {
@@ -317,6 +372,13 @@ public class RequestsFragment extends Fragment implements RequestAdapter.Adapter
                                // requestAdapter.setRecipientList(recipientName);
                                // searchAdapter.setIdList(id);
                                 recyclerView.setAdapter(requestAdapter);
+
+
+                                if (requestAdapter.getItemCount() == 0){
+
+                                    recyclerView.setVisibility(View.GONE);
+                                    txtEmpty.setVisibility(View.VISIBLE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

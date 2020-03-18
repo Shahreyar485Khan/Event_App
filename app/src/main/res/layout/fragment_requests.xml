@@ -16,7 +16,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50sdp"
-        android:background="@drawable/temp_activity_gradient"
+        android:background="@drawable/temp_activity_light_gradient"
         >
 
         <TextView
@@ -31,6 +31,20 @@
             android:textSize="@dimen/_15sdp" />
 
     </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No friend request Yet!"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_14sdp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:visibility="gone"
+        />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/requests_recycler_view"

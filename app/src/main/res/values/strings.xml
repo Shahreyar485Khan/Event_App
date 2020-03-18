@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Event App</string>
 
+    <!--test ads-->
+    <string name="app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="Banner" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="Interstitial" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+
     <string name="loading">Loading…</string>
     <string name="log_error_occurred">"Error occurred: "</string>
     <string name="drawer_open">Open</string>
@@ -28,6 +33,6 @@
     <string name="resp_failure">Response failure</string>
     <string name="resp_exist">Response exist</string>
 
-    <string name="wifi_mac_address">http://192.168.137.254/EventFcm/</string>
+    <string name="wifi_mac_address">http://eventapp.emphirezone.com/EventFCM/</string>
 
 </resources>

@@ -6,8 +6,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.eventapp.Interfaces.ResponseCallback;
@@ -38,7 +43,7 @@ public class PhpMethodsUtils {
     public void getCurrentDevice() {
 
         progressDialog = new ProgressDialog(mCtx);
-        progressDialog.setMessage("Fetching Devices...");
+        progressDialog.setMessage("Fetching user data...");
         progressDialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_FETCH_CURRENT_DEVICE,
@@ -57,7 +62,7 @@ public class PhpMethodsUtils {
                                     currentDeviceId = d.getString("id");
                                 }
 
-                                Toast.makeText(mCtx, "" + currentDeviceId, Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(mCtx, "" + currentDeviceId, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -68,7 +73,34 @@ public class PhpMethodsUtils {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        Toast.makeText(mCtx, "" + error, Toast.LENGTH_SHORT).show();
+
+                        if (error instanceof NetworkError) {
+                            Toast.makeText(mCtx,
+                                    "Oops. NetworkError error!",
+                                    Toast.LENGTH_LONG).show();
+                        } else if (error instanceof ServerError) {
+                            Toast.makeText(mCtx,
+                                    "Oops. ServerError error!",
+                                    Toast.LENGTH_LONG).show();
+                        } else if (error instanceof AuthFailureError) {
+                            Toast.makeText(mCtx,
+                                    "Oops. AuthFailureError error!",
+                                    Toast.LENGTH_LONG).show();
+                        } else if (error instanceof ParseError) {
+                            Toast.makeText(mCtx,
+                                    "Oops. ParseError error!",
+                                    Toast.LENGTH_LONG).show();
+                        } else if (error instanceof NoConnectionError) {
+                            Toast.makeText(mCtx,
+                                    "Oops. NoConnectionError error!",
+                                    Toast.LENGTH_LONG).show();
+                        } else if (error instanceof TimeoutError) {
+                            Toast.makeText(mCtx,
+                                    "Oops. Timeout error!",
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                    //    Toast.makeText(mCtx, "" + error, Toast.LENGTH_SHORT).show();
                         error.printStackTrace();
                     }
                 }) {
@@ -79,6 +111,9 @@ public class PhpMethodsUtils {
                 params.put("email", Constants.currentUser.getEmail());
                 return params;
             }
+
+
+
         };
         MyVolley.getInstance(mCtx).addToRequestQueue(stringRequest);
     }
@@ -368,7 +403,7 @@ public class PhpMethodsUtils {
         server_result = false;
         progressDialog = new ProgressDialog(mCtx);
 
-        progressDialog.setMessage("Sending Push");
+        progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoints.URL_ACCEPT_REQUEST,
@@ -383,7 +418,7 @@ public class PhpMethodsUtils {
                         try {
                             obj = new JSONObject(response);
                             String str = obj.getString("message");
-                            Toast.makeText(mCtx, "Response" + str, Toast.LENGTH_SHORT).show();
+                         //   Toast.makeText(mCtx, "Response" + str, Toast.LENGTH_SHORT).show();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -419,7 +454,7 @@ public class PhpMethodsUtils {
         server_result = false;
         progressDialog = new ProgressDialog(mCtx);
 
-        progressDialog.setMessage("Sending Push");
+        progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoints.URL_ACCEPT_EVENT_INVITATION + "event_id=" + event_id + "&sender_id=" + sender_id + "&recipient_id=" + currentDeviceId + "&email=" + email + "&name=" + name + "&event_req_status=" + req_status,
@@ -440,7 +475,7 @@ public class PhpMethodsUtils {
                                 server_result = true;
                             }
 
-                            Toast.makeText(mCtx, "Response" + str, Toast.LENGTH_SHORT).show();
+                         //   Toast.makeText(mCtx, "Response" + str, Toast.LENGTH_SHORT).show();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -462,7 +497,7 @@ public class PhpMethodsUtils {
     }
 
 
-    public void addEvent(String title, String location, String description, String eventStartTime, String eventStartDate, String eventEndDate, String eventEndTime) {
+    public void addEvent(String currentId,String title, String location, String description, String eventStartTime, String eventStartDate, String eventEndDate, String eventEndTime) {
 
         // getCurrentDevice();
      //   server_result = false;
@@ -500,7 +535,7 @@ public class PhpMethodsUtils {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("user_id", currentDeviceId);
+                params.put("user_id", currentId);
                 params.put("title", title);
                 params.put("location", location);
                 params.put("description", description);

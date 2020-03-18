@@ -15,7 +15,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:alpha="100"
-        android:background="@drawable/temp_activity_gradient">
+        android:background="@drawable/temp_activity_light_gradient">
 
         <TextView
             android:id="@+id/textView"

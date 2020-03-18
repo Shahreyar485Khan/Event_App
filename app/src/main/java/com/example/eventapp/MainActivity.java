@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //    private ProgressDialog progressDialog;
 //
 //    //URL to RegisterDevice.php
-//    private static final String URL_REGISTER_DEVICE = "http://192.168.10.15/EventFcm/RegisterDevice.php";
+//    private static final String URL_REGISTER_DEVICE = "http://192.168.10.15/EventFCM/RegisterDevice.php";
 //
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
